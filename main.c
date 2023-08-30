@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 18:05:23 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/30 19:24:13 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	main(void)
 			free_list(mini.start);
 			free_cmd(&mini);
 			free(mini.input);
-			// free(mini.cmd_tab);
 		}
 	}
 	free_env(&mini);

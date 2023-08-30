@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 18:58:18 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/30 21:23:30 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,52 @@ void	not_found(t_cmd *node)
 	free(node);
 }
 
+void	absolute_not_found(t_cmd *node)
+{
+	ft_printf("mini: No such file or directory: ");
+	ft_printf("%s\n", node->cmd);
+	free(node->cmd);
+	free(node);
+}
+
+// void	remove_path(t_cmd *node)
+// {
+// 	int		i;
+// 	int		len;
+// 	char	*new_cmd;
+
+// 	len = 0;
+// 	i = 0;
+// 	while (node->cmd[i])
+// 		i++;
+// 	while (node->cmd[--i] != '/')
+// 		len++;
+// 	i++;
+// 	new_cmd = ft_calloc(sizeof(char), len + 1);
+// 	len = 0;
+// 	while (node->cmd[i])
+// 	{
+// 		new_cmd[len] = node->cmd[i];
+// 		len++;
+// 		i++;
+// 	}
+// 	new_cmd[len] = '\0';
+// 	free(node->cmd);
+// 	node->cmd = ft_strdup(new_cmd);
+// }
+
 int	handle_absolute_path(t_cmd *node)
 {
 	if (access(node->cmd, F_OK | X_OK) == 0)
 	{
 		node->cmd_path = ft_strdup(node->cmd);
-		// node->cmd = ;
 		return (1);
 	}
 	else
 	{
-		perror("Error");
-		free(node->cmd);
-		free(node);
-		return (0);
-	}
+        absolute_not_found(node);
+        return (0);
+    }
 }
 
 int	access_path(char **env, t_cmd *node)
@@ -274,9 +305,9 @@ void	free_cmd(t_mini *mini)
 int	execution(t_mini *mini)
 {
 	is_pipe(mini);
-	// char *const str_ls[3] = {"ls", "-zozio", NULL}; // Commande "ls -l"
+	// char *const str_ls[3] = {"/usr/bin/ls", "-l", NULL}; // Commande "ls -l"
 
-	// // Exécution de la commande "ls -l"
+	// Exécution de la commande "ls -l"
 	// if (fork() == 0)
 	// {
 	// 	execve("/usr/bin/ls", str_ls, NULL);
