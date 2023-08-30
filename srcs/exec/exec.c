@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 16:08:19 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/30 18:58:18 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,28 @@ void	not_found(t_cmd *node)
 	free(node);
 }
 
-int	handle_path(char **env, t_cmd *node)
+int	handle_absolute_path(t_cmd *node)
 {
-	int		i;
+	if (access(node->cmd, F_OK | X_OK) == 0)
+	{
+		node->cmd_path = ft_strdup(node->cmd);
+		// node->cmd = ;
+		return (1);
+	}
+	else
+	{
+		perror("Error");
+		free(node->cmd);
+		free(node);
+		return (0);
+	}
+}
+
+int	access_path(char **env, t_cmd *node)
+{
 	char	*tmp;
 	char	*path;
+	int		i;
 
 	i = 0;
 	while (env[i])
@@ -44,6 +61,21 @@ int	handle_path(char **env, t_cmd *node)
 	}
 	not_found(node);
 	return (0);
+}
+
+int	handle_path(char **env, t_cmd *node)
+{
+	if (node->cmd[0] == '/' || (node->cmd[0] == '.' && node->cmd[1] == '/'))
+	{
+		if (handle_absolute_path(node))
+			return (1);
+		else
+			return (0);
+	}
+	if (access_path(env, node))
+		return (1);
+	else
+		return (0);
 }
 
 int	args_size(t_token *current)
@@ -69,22 +101,39 @@ int	handle_args(t_token *current, t_cmd *node)
 	if (!current)
 		return (0);
 	len = args_size(current);
-	// printf("%d\n", len);
-	node->cmd_args = ft_calloc(sizeof(char *), len);
+	node->cmd_args = ft_calloc(sizeof(char *), len + 1);
 	while (current && (current->type == ARG || current->type == CMD))
 	{
-        node->cmd_args[i] = ft_strdup(current->str);
-        // printf("%s\n", node->cmd_args[i]);
-        current = current->next;
-        i++;
-    }
-    return (1);
+		node->cmd_args[i] = ft_strdup(current->str);
+		current = current->next;
+		i++;
+	}
+	node->cmd_args[i] = NULL;
+	return (1);
 }
 
-int	new_cmd(t_mini *mini)
+void	add_cmd_node(t_cmd *node, t_cmd **head)
+{
+	t_cmd	*current;
+
+	if (*head == NULL)
+	{
+		*head = node;
+	}
+	else
+	{
+		current = *head;
+		while (current->next != NULL)
+		{
+			current = current->next;
+		}
+		current->next = node;
+	}
+}
+
+int	new_cmd(t_mini *mini, t_cmd **head)
 {
 	t_cmd	*node;
-	t_cmd	*current;
 	t_token	*token;
 
 	token = mini->start;
@@ -94,17 +143,31 @@ int	new_cmd(t_mini *mini)
 	node->cmd = ft_strdup(token->str);
 	if (!handle_path(mini->env, node))
 		return (0);
-	printf("%s\n", node->cmd_path);
 	if (!handle_args(mini->start, node))
 		return (0);
+	node->next = NULL;
+	add_cmd_node(node, head);
 	return (1);
+}
+
+void	print_args(t_mini *mini)
+{
+	int	i;
+
+	i = -1;
+	if (mini->cmd_tab == NULL)
+		return ;
+	ft_printf("cmd : %s\n", mini->cmd_tab->cmd);
+	ft_printf("path : %s\n", mini->cmd_tab->cmd_path);
+	while (mini->cmd_tab->cmd_args[++i])
+		ft_printf("args : %s\n", mini->cmd_tab->cmd_args[i]);
 }
 
 void	cmd_args(t_mini *mini, int is_pipe)
 {
 	if (is_pipe == 0)
 	{
-		if (!new_cmd(mini))
+		if (!new_cmd(mini, &mini->cmd_tab))
 			return ;
 		// while (current->next && (current->type != ARG
 		// && current->type != CMD))
@@ -180,6 +243,32 @@ void	is_pipe(t_mini *mini)
 		cmd_args(mini, is_pipe);
 	}
 	return ;
+}
+
+void	free_cmd(t_mini *mini)
+{
+	int		i;
+	t_cmd	*current;
+	t_cmd	*next;
+
+	current = mini->cmd_tab;
+	i = 0;
+	while (current)
+	{
+		next = current->next;
+		free(current->cmd);
+		free(current->cmd_path);
+		while (current->cmd_args[i])
+		{
+			free(current->cmd_args[i]);
+			i++;
+		}
+		free(current->cmd_args);
+		i = 0;
+		free(current);
+		current = next;
+	}
+	mini->cmd_tab = NULL;
 }
 
 int	execution(t_mini *mini)

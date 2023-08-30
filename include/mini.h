@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 13:34:14 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/30 18:06:17 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,5 +147,7 @@ void				cd_build(t_mini *mini);
 
 // exec.c
 int					execution(t_mini *mini);
+void				free_cmd(t_mini *mini);
+void				print_args(t_mini *mini);
 
 #endif
