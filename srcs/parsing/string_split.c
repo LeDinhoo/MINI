@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 12:06:34 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 16:07:22 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,17 @@ void	update_in_quotes(t_parser *parser)
 	parser->start = parser->end + 1;
 }
 
-t_token	*split_string(const char *str)
+t_token	*split_string(const char *str, t_mini *mini)
 {
 	t_token	*head;
 	t_split	*tkn;
 
-	head = NULL;
-	tkn = malloc(sizeof(t_split));
-	if (tkn == NULL)
+	if (mini->start == NULL)
+		head = NULL;
+    else
+        head = mini->start;
+    tkn = malloc(sizeof(t_split));
+    if (tkn == NULL)
 		return (NULL);
 	tkn->start = 0;
 	tkn->end = 0;

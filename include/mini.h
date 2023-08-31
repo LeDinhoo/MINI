@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 18:06:17 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 16:02:23 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+// TOKEN TYPE
 # define PATH_MAX 4096
 # define EMPTY 0
 # define CMD 1
@@ -41,6 +42,10 @@
 # define PIPE 6
 # define END 7
 # define HEREDOC 8
+
+// ERROR
+# define PIPE_ERR "Syntax error: \"|\" unexpected"
+# define LINE_ERR "Syntax error: newline unexpected"
 
 typedef struct s_switch
 {
@@ -134,7 +139,7 @@ void				print_list(t_token *head);
 
 // string_split.c :
 
-t_token				*split_string(const char *str);
+t_token				*split_string(const char *str, t_mini *mini);
 void				update_in_quotes(t_parser *parser);
 
 // builtins.c
@@ -149,5 +154,8 @@ void				cd_build(t_mini *mini);
 int					execution(t_mini *mini);
 void				free_cmd(t_mini *mini);
 void				print_args(t_mini *mini);
+
+// error_handling.c
+int					pars_error(t_mini *mini);
 
 #endif

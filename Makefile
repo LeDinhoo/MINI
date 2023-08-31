@@ -1,8 +1,8 @@
 .PHONY: all clean fclean re
 
 NAME = minishell
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CC = gcc -g3
+CFLAGS = 
 INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) 
 
@@ -26,6 +26,7 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/print_helper.c \
 		$(SRC_DIR)/srcs/parsing/string_split.c \
 		$(SRC_DIR)/srcs/parsing/token_identification.c \
+		$(SRC_DIR)/srcs/parsing/error_handling.c \
 		$(SRC_DIR)/srcs/builtins/echo.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \

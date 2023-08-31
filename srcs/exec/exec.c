@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 21:23:30 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 12:57:47 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ int	handle_absolute_path(t_cmd *node)
 	}
 	else
 	{
-        absolute_not_found(node);
-        return (0);
-    }
+		absolute_not_found(node);
+		return (0);
+	}
 }
 
 int	access_path(char **env, t_cmd *node)
@@ -155,26 +155,24 @@ void	add_cmd_node(t_cmd *node, t_cmd **head)
 	{
 		current = *head;
 		while (current->next != NULL)
-		{
 			current = current->next;
-		}
 		current->next = node;
 	}
 }
 
-int	new_cmd(t_mini *mini, t_cmd **head)
+int	new_cmd(t_mini *mini, t_cmd **head, t_token *start)
 {
 	t_cmd	*node;
 	t_token	*token;
 
-	token = mini->start;
+	token = start;
 	node = malloc(sizeof(t_cmd));
-	if (!node)
+	if (!node || !start)
 		return (0);
 	node->cmd = ft_strdup(token->str);
 	if (!handle_path(mini->env, node))
 		return (0);
-	if (!handle_args(mini->start, node))
+	if (!handle_args(token, node))
 		return (0);
 	node->next = NULL;
 	add_cmd_node(node, head);
@@ -183,63 +181,78 @@ int	new_cmd(t_mini *mini, t_cmd **head)
 
 void	print_args(t_mini *mini)
 {
-	int	i;
+	int		i;
+	t_cmd	*current;
 
 	i = -1;
 	if (mini->cmd_tab == NULL)
 		return ;
-	ft_printf("cmd : %s\n", mini->cmd_tab->cmd);
-	ft_printf("path : %s\n", mini->cmd_tab->cmd_path);
-	while (mini->cmd_tab->cmd_args[++i])
-		ft_printf("args : %s\n", mini->cmd_tab->cmd_args[i]);
+	current = mini->cmd_tab;
+	while (current)
+	{
+		ft_printf("cmd : %s\n", current->cmd);
+		ft_printf("path : %s\n", current->cmd_path);
+		while (current->cmd_args[++i])
+			ft_printf("args : %s\n", current->cmd_args[i]);
+		current = current->next;
+		i = -1;
+	}
+}
+
+t_token	*move_to_first(t_token *current)
+{
+	// ajouter la variable HEREDOC && INPUT
+	// APPEND ?? TRUNC ??
+	if (current != NULL && (current->type != ARG && current->type != CMD))
+		current = current->next;
+	if (current != NULL && current->prev && (current->prev->type == INPUT
+			|| current->prev->type == HEREDOC))
+		current = current->next;
+	return (current);
+}
+
+t_token	*move_to_next(t_token *current)
+{
+	// ajouter la variable HEREDOC && INPUT
+	// APPEND ?? TRUNC ??
+	// PIPE VIDE
+	while (current != NULL && (current->type != PIPE))
+	{
+		current = current->next;
+	}
+	return (current);
 }
 
 void	cmd_args(t_mini *mini, int is_pipe)
 {
+	t_token	*current;
+
+	current = mini->start;
 	if (is_pipe == 0)
 	{
-		if (!new_cmd(mini, &mini->cmd_tab))
+		current = move_to_first(current);
+		if (!new_cmd(mini, &mini->cmd_tab, current))
 			return ;
-		// while (current->next && (current->type != ARG
-		// && current->type != CMD))
-		// 	current = current->next;
-		// while (current->next && (current->type == ARG
-		// || current->type == CMD))
-		// {
-		// 	current = current->next;
-		// 	ft_printf("%s\n", current->str);
-		// }
 	}
-	// else
-	// {
-	// while (current->next && (current->type != ARG && current->type != CMD))
-	// 	current = current->next;
-	// ft_printf("%s\n", current->str);
-	// while (current->next && (current->type == ARG || current->type == CMD))
-	// {
-	// 	current = current->next;
-	// 	ft_printf("%s\n", current->str);
-	// }
-	// while (current->next && (current->type != PIPE))
-	// 	current = current->next;
-	// current = current->next;
-	// while (current->next && (current->type == ARG || current->type == CMD))
-	// {
-	// 	current = current->next;
-	// 	ft_printf("%s\n", current->str);
-	// }
-	// ft_printf("%s\n", current->str);
-	// }
-	// Initialiser le premier noeud;
-	//  Verifier si le premier token etant CMD est valide
-	//{
-	//  Si Valide
-	// {
-	// sauvegarder le path dans *cmd_path;
-	// sauvegarder le nom de la commande dans cmd;
-	// }
-	//
-	// Else afficher cmd not found;
+	else
+	{
+		while (current != NULL)
+		{
+			if (move_to_first(current))
+				current = move_to_first(current);
+			else
+				return ;
+			if (!new_cmd(mini, &mini->cmd_tab, current))
+			{
+				if (move_to_next(current))
+					current = move_to_next(current);
+				else
+					return ;
+			}
+			else
+				current = move_to_next(current);
+		}
+	}
 }
 
 void	is_pipe(t_mini *mini)
@@ -260,19 +273,7 @@ void	is_pipe(t_mini *mini)
 		}
 		current = current->next;
 	}
-	if (is_pipe == 1)
-	{
-		ft_printf("PIPE\n");
-		// Lancer parsing pour plusieurs commandes
-		cmd_args(mini, is_pipe);
-	}
-	else
-	{
-		ft_printf("SOLO\n");
-		// Donc une seul commande
-		// Lancer le parsing pour une commande
-		cmd_args(mini, is_pipe);
-	}
+	cmd_args(mini, is_pipe);
 	return ;
 }
 
