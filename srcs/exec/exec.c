@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 20:25:11 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/05 01:25:09 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,32 +27,6 @@ void	absolute_not_found(t_cmd *node)
 	free(node->cmd);
 	free(node);
 }
-
-// void	remove_path(t_cmd *node)
-// {
-// 	int		i;
-// 	int		len;
-// 	char	*new_cmd;
-
-// 	len = 0;
-// 	i = 0;
-// 	while (node->cmd[i])
-// 		i++;
-// 	while (node->cmd[--i] != '/')
-// 		len++;
-// 	i++;
-// 	new_cmd = ft_calloc(sizeof(char), len + 1);
-// 	len = 0;
-// 	while (node->cmd[i])
-// 	{
-// 		new_cmd[len] = node->cmd[i];
-// 		len++;
-// 		i++;
-// 	}
-// 	new_cmd[len] = '\0';
-// 	free(node->cmd);
-// 	node->cmd = ft_strdup(new_cmd);
-// }
 
 int	handle_absolute_path(t_cmd *node)
 {
@@ -109,40 +83,6 @@ int	handle_path(char **env, t_cmd *node)
 		return (0);
 }
 
-int	args_size(t_token *current)
-{
-	int	i;
-
-	i = 0;
-	while (current && (current->type == ARG || current->type == CMD))
-	{
-		current = current->next;
-		i++;
-	}
-	return (i);
-}
-
-int	handle_args(t_token *current, t_cmd *node)
-{
-	int	len;
-	int	i;
-
-	i = 0;
-	len = 0;
-	if (!current)
-		return (0);
-	len = args_size(current);
-	node->cmd_args = ft_calloc(sizeof(char *), len + 1);
-	while (current && (current->type == ARG || current->type == CMD))
-	{
-		node->cmd_args[i] = ft_strdup(current->str);
-		current = current->next;
-		i++;
-	}
-	node->cmd_args[i] = NULL;
-	return (1);
-}
-
 void	add_cmd_node(t_cmd *node, t_cmd **head)
 {
 	t_cmd	*current;
@@ -160,25 +100,6 @@ void	add_cmd_node(t_cmd *node, t_cmd **head)
 	}
 }
 
-int	new_cmd(t_mini *mini, t_cmd **head, t_token *start)
-{
-	t_cmd	*node;
-	t_token	*token;
-
-	token = start;
-	node = malloc(sizeof(t_cmd));
-	if (!node || !start)
-		return (0);
-	node->cmd = ft_strdup(token->str);
-	if (!handle_path(mini->env, node))
-		return (0);
-	if (!handle_args(token, node))
-		return (0);
-	node->next = NULL;
-	add_cmd_node(node, head);
-	return (1);
-}
-
 void	print_args(t_mini *mini)
 {
 	int		i;
@@ -192,94 +113,220 @@ void	print_args(t_mini *mini)
 	{
 		ft_printf("cmd : %s\n", current->cmd);
 		ft_printf("path : %s\n", current->cmd_path);
-		while (current->cmd_args[++i])
+		while (current->cmd_args && current->cmd_args[++i])
 			ft_printf("args : %s\n", current->cmd_args[i]);
+		ft_printf("input : %s\n", current->output_file);
 		current = current->next;
 		i = -1;
 	}
 }
 
-t_token	*move_to_first(t_token *current)
+t_cmd	*create_new_cmd(void)
 {
-	// ajouter la variable HEREDOC && INPUT
-	// APPEND ?? TRUNC ??
-	if (current != NULL && (current->type != ARG && current->type != CMD))
+	t_cmd	*node;
+
+	node = malloc(sizeof(t_cmd));
+	if (node == NULL)
 	{
-		ft_printf("ICI");
-		current = current->next;
+		perror("malloc");
+		exit(EXIT_FAILURE);
 	}
-	if ((current != NULL && current->prev) && (current->prev->type == INPUT
-			|| current->prev->type == HEREDOC))
-	{
-		ft_printf("LA");
-		current = current->next;
-	}
-	return (current);
+	node->cmd = NULL;
+	node->cmd_path = NULL;
+	node->cmd_args = NULL;
+	node->output_file = NULL;
+	node->next = NULL;
+	return (node);
 }
 
-t_token	*move_to_next(t_token *current)
+// Fonction pour gérer la redirection d'entrée (<)
+void	handle_input_redirection(t_cmd *cmd, const char *filename)
 {
-	// ajouter la variable HEREDOC && INPUT
-	// APPEND ?? TRUNC ??
-	// PIPE VIDE
-	while (current != NULL && (current->type != PIPE))
-	{
-		current = current->next;
-	}
-	return (current);
+	// Enregistrez le nom du fichier d'entrée
+	// cmd->cmd_path = strdup(filename);
 }
 
-void	cmd_args(t_mini *mini, int is_pipe)
+// Fonction pour gérer la redirection de sortie (>)
+void	handle_output_redirection(t_cmd *cmd, const char *filename)
+{
+	// Enregistrez le nom du fichier de sortie
+	// cmd->output_file = ft_strdup(filename);
+	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
+}
+
+// Fonction pour gérer la redirection de sortie en mode ajout (>>)
+void	handle_append_redirection(t_cmd *cmd, const char *filename)
+{
+	// Enregistrez le nom du fichier de sortie en mode ajout
+	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
+}
+
+// Fonction pour gérer le here-document (<<)
+void	handle_heredoc(t_cmd *cmd, const char *content)
+{
+	// Enregistrez le contenu du here-document
+	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
+}
+
+// Fonction pour gérer une commande
+void	handle_arg(t_cmd *cmd, const char *argument)
+{
+	int	num_args;
+
+	num_args = 0;
+	if (cmd->cmd_args)
+	{
+		while (cmd->cmd_args[num_args] != NULL)
+			num_args++;
+	}
+	cmd->cmd_args = realloc(cmd->cmd_args, (num_args + 2) * sizeof(char *));
+	if (cmd->cmd_args == NULL)
+	{
+		perror("realloc");
+		exit(EXIT_FAILURE);
+	}
+	cmd->cmd_args[num_args] = strdup(argument);
+	cmd->cmd_args[num_args + 1] = NULL;
+}
+
+void	handle_cmd(t_mini *mini, t_cmd **head, t_token *start, t_cmd *node)
+{
+	// Enregistrez le nom de la commande
+	if (!node || !start)
+		return ;
+	node->cmd = ft_strdup(start->str);
+	if (!handle_path(mini->env, node))
+	{
+		return ;
+	}
+	handle_arg(node, start->str);
+	add_cmd_node(node, head);
+	return ;
+}
+
+// Fonction pour gérer un argument
+
+void	cmd_args(t_mini *mini)
 {
 	t_token	*current;
+	int		expecting_input;
+	int		expecting_output;
+	int		expecting_append;
+	int		expecting_heredoc;
+	int		new_cmd;
+	t_cmd	*current_cmd;
 
 	current = mini->start;
-	if (is_pipe == 0)
+	expecting_input = 0;
+	expecting_output = 0;
+	expecting_append = 0;
+	expecting_heredoc = 0;
+	new_cmd = 0;
+	current_cmd = NULL; // La commande en cours de traitement
+	while (current != NULL)
 	{
-		current = move_to_first(current);
-		if (!new_cmd(mini, &mini->cmd_tab, current))
-			return ;
-	}
-	else
-	{
-		while (current != NULL)
+		// if (new_cmd == 0)
+		// {
+		// 	current_cmd = create_new_cmd();
+		// 	new_cmd = 1;
+		// }
+		if (current->type == CMD)
 		{
-			if (move_to_first(current))
-				current = move_to_first(current);
+			// Créez une nouvelle structure t_cmd pour la commande actuelle
+			current_cmd = create_new_cmd();
+			if (expecting_input)
+			{
+				// Le token précédent était un opérateur de redirection (<)
+				// Traitez-le comme un nom de fichier d'entrée pour la commande précédente
+				handle_input_redirection(current_cmd, current->str);
+				expecting_input = 0;
+			}
+			else if (expecting_output)
+			{
+				// Le token précédent était un opérateur de redirection (>)
+				// Traitez-le comme un nom de fichier de sortie
+				handle_output_redirection(current_cmd, current->str);
+				expecting_output = 0;
+			}
+			else if (expecting_append)
+			{
+				// Le token précédent était un opérateur de redirection (>>)
+				// Traitez-le comme un nom de fichier de sortie en mode ajout
+				handle_append_redirection(current_cmd, current->str);
+				expecting_append = 0;
+			}
+			else if (expecting_heredoc)
+			{
+				// Le token précédent était un opérateur de here-document (<<)
+				// Traitez-le comme le contenu du here-document
+				handle_heredoc(current_cmd, current->str);
+				expecting_heredoc = 0;
+			}
 			else
 			{
-				return ;
+				// Traitez la commande normalement
+				handle_cmd(mini, &mini->cmd_tab, current, current_cmd);
 			}
-			if (!new_cmd(mini, &mini->cmd_tab, current))
-			{
-				if (move_to_next(current))
-					current = move_to_next(current);
-				else
-					return ;
-			}
-			// else
-			// 	current = move_to_next(current);
 		}
-	}
-}
-
-void	is_pipe(t_mini *mini)
-{
-	t_token	*current;
-	int		is_pipe;
-
-	mini->is_pipe = 0;
-	if (mini->start == NULL)
-		return ;
-	current = mini->start;
-	while (current)
-	{
-		if (current->type == PIPE)
-			mini->is_pipe = 1;
+		else if (current->type == ARG)
+		{
+			if (expecting_input)
+			{
+				// Le token précédent était un opérateur de redirection (<)
+				// Traitez-le comme un nom de fichier d'entrée pour la commande précédente
+				handle_input_redirection(current_cmd, current->str);
+				expecting_input = 0;
+			}
+			else if (expecting_output)
+			{
+				// Le token précédent était un opérateur de redirection (>)
+				// Traitez-le comme un nom de fichier de sortie
+				handle_output_redirection(current_cmd, current->str);
+				expecting_output = 0;
+			}
+			else if (expecting_append)
+			{
+				// Le token précédent était un opérateur de redirection (>>)
+				// Traitez-le comme un nom de fichier de sortie en mode ajout
+				handle_append_redirection(current_cmd, current->str);
+				expecting_append = 0;
+			}
+			else if (expecting_heredoc)
+			{
+				// Le token précédent était un opérateur de here-document (<<)
+				// Traitez-le comme le contenu du here-document
+				handle_heredoc(current_cmd, current->str);
+				expecting_heredoc = 0;
+			}
+			else
+			{
+				// Traitez l'argument normalement
+				handle_arg(current_cmd, current->str);
+				new_cmd = 0;
+			}
+		}
+		else if (current->type == INPUT)
+		{
+			// Marquez que nous attendons une redirection d'entrée
+			expecting_input = 1;
+		}
+		else if (current->type == TRUNC)
+		{
+			// Marquez que nous attendons une redirection de sortie >
+			expecting_output = 1;
+		}
+		else if (current->type == APPEND)
+		{
+			// Marquez que nous attendons une redirection de sortie >>
+			expecting_append = 1;
+		}
+		else if (current->type == HEREDOC)
+		{
+			// Marquez que nous attendons un here-document <<
+			expecting_heredoc = 1;
+		}
 		current = current->next;
 	}
-	cmd_args(mini, mini->is_pipe);
-	return ;
 }
 
 void	free_cmd(t_mini *mini)
@@ -295,7 +342,7 @@ void	free_cmd(t_mini *mini)
 		next = current->next;
 		free(current->cmd);
 		free(current->cmd_path);
-		while (current->cmd_args[i])
+		while (current->cmd_args && current->cmd_args[i])
 		{
 			free(current->cmd_args[i]);
 			i++;
@@ -310,22 +357,22 @@ void	free_cmd(t_mini *mini)
 
 int	execution(t_mini *mini)
 {
-	t_cmd *cmd;
+	// t_cmd *cmd;
 
-	cmd = NULL;
-	is_pipe(mini);
-	cmd = mini->cmd_tab;
-	if (cmd && mini->is_pipe == 0)
-	{
-		// Exécution de la commande "ls -l"
-		if (fork() == 0)
-		{
-			execve(cmd->cmd_path, cmd->cmd_args, NULL);
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-	}
-	wait(NULL);
+	// cmd = NULL;
+	cmd_args(mini);
+	// cmd = mini->cmd_tab;
+	// if (cmd && mini->is_pipe == 0)
+	// {
+	// 	// Exécution de la commande "ls -l"
+	// 	if (fork() == 0)
+	// 	{
+	// 		execve(cmd->cmd_path, cmd->cmd_args, NULL);
+	// 		perror("execve");
+	// 		exit(EXIT_FAILURE);
+	// 	}
+	// }
+	// wait(NULL);
 
 	// char *const str_ls[3] = {"/usr/bin/ls", "-l", NULL}; // Commande "ls -l"
 

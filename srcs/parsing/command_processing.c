@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 12:05:33 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/04 17:34:12 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,27 @@ void	update_token_types(t_mini *mini)
 {
 	t_token	*current;
 	int		i;
+	int		redirection;
 
 	i = 0;
+	redirection = 0;
 	current = mini->start;
 	while (current != NULL)
 	{
-		is_cmd(current, mini->env, i);
-		i = 0;
+		if (current->next && redirection == 1)
+		{
+			current = current->next;
+			current->type = CMD;
+			redirection = 0;
+		}
+		if (!current->prev || current->prev->type == PIPE)
+		{
+			if (current->type == HEREDOC || current->type == INPUT
+				|| current->type == APPEND || current->type == TRUNC)
+				redirection = 1;
+			else
+				current->type = CMD;
+		}
 		current = current->next;
 	}
 }

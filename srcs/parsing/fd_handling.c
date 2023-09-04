@@ -6,12 +6,14 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:27:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 18:11:55 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/04 09:15:30 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
+
+//Ajoute le here_doc FD a la commande
 void	setup_here_doc(t_mini *mini, char *limiter)
 {
     char    *s1;

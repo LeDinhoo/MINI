@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 18:28:56 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/05 01:01:25 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ typedef struct s_cmd
 	char			*cmd;
 	char			*cmd_path;
 	char			**cmd_args;
+	///
+	char			*output_file;
 	struct s_cmd	*next;
 }					t_cmd;
 
