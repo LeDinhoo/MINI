@@ -27,6 +27,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/string_split.c \
 		$(SRC_DIR)/srcs/parsing/token_identification.c \
 		$(SRC_DIR)/srcs/parsing/error_handling.c \
+		$(SRC_DIR)/srcs/parsing/fd_handling.c \
+		$(SRC_DIR)/srcs/parsing/pars_token.c \
 		$(SRC_DIR)/srcs/builtins/echo.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \

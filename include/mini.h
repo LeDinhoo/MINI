@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 16:02:23 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 18:28:56 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ typedef struct s_parser
 
 typedef struct s_cmd
 {
-	int				is_pipe;
 	char			*cmd;
 	char			*cmd_path;
 	char			**cmd_args;
@@ -103,6 +102,13 @@ typedef struct s_cmd
 
 typedef struct s_mini
 {
+	int				is_pipe;
+	int				is_here_doc;
+	int				is_input;
+	int				here_doc_fd;
+	char			*infile;
+	char			*outfile;
+	///
 	char			*input;
 	char			**env;
 	struct s_token	*start;
@@ -156,6 +162,17 @@ void				free_cmd(t_mini *mini);
 void				print_args(t_mini *mini);
 
 // error_handling.c
-int					pars_error(t_mini *mini);
+int					pars_token(t_mini *mini);
+void				print_error(char *action);
+int					pipe_error(t_token *current);
+int					redirection_error(t_token *current);
+
+// fd_handling.c
+void				setup_here_doc(t_mini *mini, char *limiter);
+
+// pars_token.c
+int					pars_token(t_mini *mini);
+char				*pipe_prompt(void);
+char				*here_prompt(void);
 
 #endif

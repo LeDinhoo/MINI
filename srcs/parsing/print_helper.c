@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/07/14 15:10:28 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 19:27:17 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void	print_list(t_token *head)
 	current = head;
 	while (current != NULL)
 	{
-		printf("Token: %s, Type: %d\n", current->str, current->type);
+		if (current->prev)
+			printf("Token: %s, Type: %d\n", current->str, current->type);
+		else
+			printf("Token: %s, Type: %d\n", current->str, current->type);
 		current = current->next;
 	}
 }

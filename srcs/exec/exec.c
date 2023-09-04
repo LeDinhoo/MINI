@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 12:57:47 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 20:25:11 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,10 +204,16 @@ t_token	*move_to_first(t_token *current)
 	// ajouter la variable HEREDOC && INPUT
 	// APPEND ?? TRUNC ??
 	if (current != NULL && (current->type != ARG && current->type != CMD))
+	{
+		ft_printf("ICI");
 		current = current->next;
-	if (current != NULL && current->prev && (current->prev->type == INPUT
+	}
+	if ((current != NULL && current->prev) && (current->prev->type == INPUT
 			|| current->prev->type == HEREDOC))
+	{
+		ft_printf("LA");
 		current = current->next;
+	}
 	return (current);
 }
 
@@ -241,7 +247,9 @@ void	cmd_args(t_mini *mini, int is_pipe)
 			if (move_to_first(current))
 				current = move_to_first(current);
 			else
+			{
 				return ;
+			}
 			if (!new_cmd(mini, &mini->cmd_tab, current))
 			{
 				if (move_to_next(current))
@@ -249,8 +257,8 @@ void	cmd_args(t_mini *mini, int is_pipe)
 				else
 					return ;
 			}
-			else
-				current = move_to_next(current);
+			// else
+			// 	current = move_to_next(current);
 		}
 	}
 }
@@ -260,20 +268,17 @@ void	is_pipe(t_mini *mini)
 	t_token	*current;
 	int		is_pipe;
 
-	is_pipe = 0;
+	mini->is_pipe = 0;
 	if (mini->start == NULL)
 		return ;
 	current = mini->start;
 	while (current)
 	{
 		if (current->type == PIPE)
-		{
-			is_pipe = 1;
-			// Variables pipe a 1 on est dans une ligne de commande pipe
-		}
+			mini->is_pipe = 1;
 		current = current->next;
 	}
-	cmd_args(mini, is_pipe);
+	cmd_args(mini, mini->is_pipe);
 	return ;
 }
 
@@ -305,16 +310,24 @@ void	free_cmd(t_mini *mini)
 
 int	execution(t_mini *mini)
 {
-	is_pipe(mini);
-	// char *const str_ls[3] = {"/usr/bin/ls", "-l", NULL}; // Commande "ls -l"
+	t_cmd *cmd;
 
-	// Exécution de la commande "ls -l"
-	// if (fork() == 0)
-	// {
-	// 	execve("/usr/bin/ls", str_ls, NULL);
-	// 	perror("execve ls");
-	// 	exit(EXIT_FAILURE);
-	// }
+	cmd = NULL;
+	is_pipe(mini);
+	cmd = mini->cmd_tab;
+	if (cmd && mini->is_pipe == 0)
+	{
+		// Exécution de la commande "ls -l"
+		if (fork() == 0)
+		{
+			execve(cmd->cmd_path, cmd->cmd_args, NULL);
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+	}
+	wait(NULL);
+
+	// char *const str_ls[3] = {"/usr/bin/ls", "-l", NULL}; // Commande "ls -l"
 
 	// // Exécution de la commande inexistante "xyz123"
 	// if (fork() == 0) {
@@ -324,7 +337,6 @@ int	execution(t_mini *mini)
 	// }
 
 	// // Attendre que les processus fils se terminent
-	// wait(NULL);
 	// wait(NULL);
 	return (0);
 }

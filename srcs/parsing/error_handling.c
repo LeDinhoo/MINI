@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 13:21:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 16:18:32 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/08/31 17:51:16 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,52 +18,31 @@ void	print_error(char *action)
 	ft_printf("%s\n", action);
 }
 
-char	*pipe_prompt(void)
+int	redirection_error(t_token *current)
 {
-	static char	prompt[PATH_MAX];
-
-	memset(prompt, 0, sizeof(prompt));
-	strcat(prompt, "pipe> ");
-	return (prompt);
+	if (!current->next && (current->type == TRUNC || current->type == APPEND
+			|| current->type == INPUT || current->type == HEREDOC))
+	{
+		print_error(LINE_ERR);
+		return (0);
+	}
 }
 
-int	pars_error(t_mini *mini)
+int	pipe_error(t_token *current)
 {
-	t_token *current;
-	char *prompt;
-
-	current = mini->start;
-	while (current != NULL)
+	if (!current->prev && current->type == PIPE)
 	{
-		if (!current->next && (current->type == TRUNC || current->type == APPEND
-				|| current->type == INPUT || current->type == HEREDOC))
-		{
-			print_error(LINE_ERR);
-			return (0);
-		}
-		if (!current->prev && current->type == PIPE)
+		print_error(PIPE_ERR);
+		return (0);
+	}
+	if (current->next && current->prev)
+	{
+		if ((current->prev->type == PIPE || current->next->type == PIPE)
+			&& current->type == PIPE)
 		{
 			print_error(PIPE_ERR);
 			return (0);
 		}
-		if (current->next && current->prev)
-		{
-			if ((current->prev->type == PIPE || current->next->type == PIPE)
-				&& current->type == PIPE)
-			{
-				print_error(PIPE_ERR);
-				return (0);
-			}
-		}
-		if (!current->next && current->type == PIPE)
-		{
-			prompt = pipe_prompt();
-			mini->input = readline(prompt);
-			mini->start = split_string(mini->input, mini);
-			if (!pars_error(mini))
-				return (0);
-		}
-		current = current->next;
 	}
 	return (1);
 }
