@@ -6,7 +6,7 @@
 /*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/08 17:45:08 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/09/08 18:05:04 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char *ft_prompt(t_mini *mini)
 	
 	// ft_init_signals(mini->sig);
 	sigaction(SIGINT, mini->sig->int_prompt, NULL);
+	// sigaction(SIGQUIT, mini->sig->int_prompt, NULL);
 	prompt = get_prompt_str();
 	mini->input = readline(prompt);
 	// ft_init_quit_handle(mini->sig);
