@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/05 01:01:25 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/08 16:40:02 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <signal.h>
+# include <stdarg.h>
 
 // TOKEN TYPE
 # define PATH_MAX 4096
@@ -46,6 +48,17 @@
 // ERROR
 # define PIPE_ERR "Syntax error: \"|\" unexpected"
 # define LINE_ERR "Syntax error: newline unexpected"
+
+typedef struct s_sig
+{
+	struct sigaction *int_prompt;
+	struct sigaction *int_exec;
+	// struct sigaction *int_parent;
+	struct sigaction *here_doc;
+	struct sigaction *quit_prompt;
+	struct sigaction *quit_exec;
+	// struct sigaction *quit_parent;
+}	t_sig;
 
 typedef struct s_switch
 {
@@ -115,6 +128,7 @@ typedef struct s_mini
 	char			**env;
 	struct s_token	*start;
 	struct s_cmd	*cmd_tab;
+	t_sig			*sig;
 }					t_mini;
 
 // path.c :
@@ -176,5 +190,15 @@ void				setup_here_doc(t_mini *mini, char *limiter);
 int					pars_token(t_mini *mini);
 char				*pipe_prompt(void);
 char				*here_prompt(void);
+
+
+int	ft_dprintf(int fd, char *txt, ...);
+
+// main.c
+
+// char 	*ft_prompt(t_mini *mini);
+// void	ft_set_signals_handle(t_sig *sig);
+// void	ft_handle_signal(int signum);
+// void 	ft_set_signals(void);
 
 #endif
