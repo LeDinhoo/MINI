@@ -6,47 +6,46 @@
 /*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/07 17:50:36 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/09/08 10:56:55 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-// void ft_set_signals(void)
-// {
-// 	struct sigaction	act;
+void ft_set_signals(void)
+{
+	struct sigaction	act;
 	
-// 	ft_memset(&act, 0, sizeof(struct sigaction));
-// 	rl_on_new_line();
-// 	rl_redisplay();
-// }
+	ft_memset(&act, 0, sizeof(struct sigaction));
+	rl_on_new_line();
+	rl_redisplay();
+}
 
-// void	ft_handle_signal()
-// {
-// 	rl_on_new_line();
-// }
+void	ft_handle_signal()
+{
+	rl_on_new_line();
+}
 
-// ft_ignore_quit_signal()
+ft_ignore_quit_signal()
 
-// void	set_signals_handle(void)
-// {
-// 	struct sigaction act;
+void	set_signals_handle(void)
+{
+	struct sigaction act;
 	
-// 	ft_ignore_quit_signal();
-// 	ft_memset(&act, 0, sizeof(struct sigaction));
-// 	act.sa_handler = ft_handle_signal;
-// 	sigaction.
-// }
+	ft_ignore_quit_signal();
+	ft_memset(&act, 0, sizeof(struct sigaction));
+	act.sa_handler = &ft_handle_signal;
+}
 
-// char *ft_prompt(t_mini *mini)
-// {
-// 	char *prompt;
+char *ft_prompt(t_mini *mini)
+{
+	char *prompt;
 	
-// 	ft_set_signals();
-// 	prompt = get_prompt_str();
-// 	mini->input = readline(prompt);
-// 	ft_set_signals_handle();
-// }
+	ft_set_signals();
+	prompt = get_prompt_str();
+	mini->input = readline(prompt);
+	ft_set_signals_handle();
+}
 
 int	main(void)
 {
@@ -59,6 +58,7 @@ int	main(void)
 		
 		prompt = get_prompt_str();
 		mini.input = readline(prompt);
+		// ft_prompt(mini);
 		if (mini.input != NULL)
 		{
 			if (strcmp(mini.input, "exit") == 0)
