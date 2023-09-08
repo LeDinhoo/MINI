@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/05 16:13:35 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/08 11:17:55 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ void	not_found(t_cmd *node)
 {
 	ft_printf("mini: command not found:");
 	ft_printf(" %s\n", node->cmd);
-	free(node->cmd);
-	free(node);
+	// free(node->cmd);
+	// free(node);
 }
 
 void	absolute_not_found(t_cmd *node)
 {
 	ft_printf("mini: No such file or directory: ");
 	ft_printf("%s\n", node->cmd);
-	free(node->cmd);
-	free(node);
+	// free(node->cmd);
+	// free(node);
 }
 
 int	handle_absolute_path(t_cmd *node)
@@ -105,19 +105,25 @@ void	print_args(t_mini *mini)
 	int		i;
 	t_cmd	*current;
 
-	i = -1;
+	i = 0;
 	if (mini->cmd_tab == NULL)
 		return ;
 	current = mini->cmd_tab;
-	while (current)
+	while (current != NULL && current->cmd != NULL)
 	{
-		ft_printf("cmd : %s\n", current->cmd);
+		ft_printf("---- Command ----\ncmd : %s\n", current->cmd);
 		ft_printf("path : %s\n", current->cmd_path);
-		while (current->cmd_args && current->cmd_args[++i])
+		while (current->cmd_args && current->cmd_args[i])
+		{
 			ft_printf("args : %s\n", current->cmd_args[i]);
-		ft_printf("input : %s\n", current->output_file);
+			i++;
+		}
+		ft_printf("--- Redirection ---\noutput : %s\n",
+			current->redir.output_file);
+		ft_printf("append : %s\n", current->redir.append_file);
+		ft_printf("input : %s\n\n", current->redir.input_file);
 		current = current->next;
-		i = -1;
+		i = 0;
 	}
 }
 
@@ -134,7 +140,10 @@ t_cmd	*create_new_cmd(void)
 	node->cmd = NULL;
 	node->cmd_path = NULL;
 	node->cmd_args = NULL;
-	node->output_file = NULL;
+	node->redir.output_file = NULL;
+	node->redir.append_file = NULL;
+	node->redir.input_file = NULL;
+	node->redir.heredoc_content = NULL;
 	node->next = NULL;
 	return (node);
 }
@@ -143,14 +152,14 @@ t_cmd	*create_new_cmd(void)
 void	handle_input_redirection(t_cmd *cmd, const char *filename)
 {
 	// Enregistrez le nom du fichier d'entrée
-	// cmd->cmd_path = strdup(filename);
+	cmd->redir.input_file = strdup(filename);
 }
 
 // Fonction pour gérer la redirection de sortie (>)
 void	handle_output_redirection(t_cmd *cmd, const char *filename)
 {
 	// Enregistrez le nom du fichier de sortie
-	// cmd->output_file = ft_strdup(filename);
+	cmd->redir.output_file = ft_strdup(filename);
 	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
 }
 
@@ -158,6 +167,7 @@ void	handle_output_redirection(t_cmd *cmd, const char *filename)
 void	handle_append_redirection(t_cmd *cmd, const char *filename)
 {
 	// Enregistrez le nom du fichier de sortie en mode ajout
+	cmd->redir.append_file = strdup(filename);
 	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
 }
 
@@ -195,12 +205,11 @@ void	handle_cmd(t_mini *mini, t_cmd **head, t_token *start, t_cmd *node)
 	if (!node || !start)
 		return ;
 	node->cmd = ft_strdup(start->str);
-	if (!handle_path(mini->env, node))
-	{
-		return ;
-	}
+	// if (!handle_path(mini->env, node))
+	// {
+    //     // return;
+    // }
 	handle_arg(node, start->str);
-	add_cmd_node(node, head);
 	return ;
 }
 
@@ -221,19 +230,19 @@ void	cmd_args(t_mini *mini)
 	expecting_output = 0;
 	expecting_append = 0;
 	expecting_heredoc = 0;
-	new_cmd = 0;
 	current_cmd = NULL; // La commande en cours de traitement
-	while (current != NULL)
-	{
-		// if (new_cmd == 0)
-		// {
-		// 	current_cmd = create_new_cmd();
-		// 	new_cmd = 1;
-		// }
+    new_cmd = 0;
+    while (current != NULL)
+    {
+		if (new_cmd == 0)
+		{
+			current_cmd = create_new_cmd();
+			new_cmd = 1;
+		}
 		if (current->type == CMD)
 		{
 			// Créez une nouvelle structure t_cmd pour la commande actuelle
-			current_cmd = create_new_cmd();
+			// current_cmd = create_new_cmd();
 			if (expecting_input)
 			{
 				// Le token précédent était un opérateur de redirection (<)
@@ -302,7 +311,6 @@ void	cmd_args(t_mini *mini)
 			{
 				// Traitez l'argument normalement
 				handle_arg(current_cmd, current->str);
-				new_cmd = 0;
 			}
 		}
 		else if (current->type == INPUT)
@@ -324,6 +332,19 @@ void	cmd_args(t_mini *mini)
 		{
 			// Marquez que nous attendons un here-document <<
 			expecting_heredoc = 1;
+		}
+		if (current != NULL && (current->next == NULL || current->type == PIPE))
+		{
+			if (current->type == PIPE)
+			{
+				add_cmd_node(current_cmd, &mini->cmd_tab);
+				new_cmd = 0;
+			}
+			else
+			{
+				add_cmd_node(current_cmd, &mini->cmd_tab);
+				new_cmd = 0;
+			}
 		}
 		current = current->next;
 	}
@@ -350,40 +371,90 @@ void	free_cmd(t_mini *mini)
 		free(current->cmd_args);
 		i = 0;
 		free(current);
+		// FREE LES REDIRECTIONS SI IL Y EN A
 		current = next;
 	}
 	mini->cmd_tab = NULL;
 }
 
+int	cmd_numbers(t_cmd *cmd)
+{
+	t_cmd	*current;
+	int			nb;
+
+	current = cmd;
+	nb = 0;
+	while (current != NULL)
+	{
+		current = current->next;
+		nb++;
+	}
+	return (nb);
+}
+
 int	execution(t_mini *mini)
 {
-	// t_cmd *cmd;
-
-	// cmd = NULL;
 	cmd_args(mini);
-	// cmd = mini->cmd_tab;
-	// if (cmd && mini->is_pipe == 0)
+	//////////////////////////////////////////////////////
+	// t_cmd *current;
+	// int num_pipes;
+	// int pipefd[2];
+	// pid_t pid;
+	// int i;
+
+	// int input_fd = STDIN_FILENO; // Initialisez l'entrée au terminal
+	// current = mini->cmd_tab;
+	// num_pipes = cmd_numbers(mini->cmd_tab);
+	// for (i = 0; i < num_pipes; i++)
 	// {
-	// 	// Exécution de la commande "ls -l"
-	// 	if (fork() == 0)
+	// 	// Créez un tube (pipe) pour chaque paire de commandes
+	// 	if (pipe(pipefd) == -1)
 	// 	{
-	// 		execve(cmd->cmd_path, cmd->cmd_args, NULL);
-	// 		perror("execve");
+	// 		perror("pipe");
 	// 		exit(EXIT_FAILURE);
 	// 	}
+
+	// 	// Créez un nouveau processus
+	// 	pid = fork();
+	// 	if (pid == -1)
+	// 	{
+	// 		perror("fork");
+	// 		exit(EXIT_FAILURE);
+	// 	}
+
+	// 	if (pid == 0) // Processus enfant
+	// 	{
+	// 		// Redirigez l'entrée standard (STDIN) vers le tube d'entrée de la première commande
+	// 		if (i == 0)
+	// 			dup2(input_fd, STDIN_FILENO);
+	// 		else
+	// 			dup2(pipefd[0], STDIN_FILENO);
+
+	// 		// Redirigez la sortie standard (STDOUT) vers le tube de sortie de la commande actuelle
+	// 		if (i < num_pipes - 1)
+	// 			dup2(pipefd[1], STDOUT_FILENO);
+
+	// 		// Fermez les extrémités inutilisées du tube
+	// 		close(pipefd[0]);
+	// 		close(pipefd[1]);
+
+	// 		// Exécutez la commande actuelle
+	// 		execlp("ls", "ls", NULL); // Remplacez "ls" par votre commande
+	// 		perror("execlp");
+	// 		exit(EXIT_FAILURE);
+	// 	}
+	// 	else // Processus parent
+	// 	{
+	// 		// Fermez l'extrémité de lecture du tube de la commande précédente
+	// 		if (i > 0)
+	// 			close(pipefd[0]);
+
+	// 		// Attendez que le processus enfant se termine
+	// 		wait(NULL);
+	// 	}
+
+	// 	// L'entrée pour la prochaine commande est l'extrémité de lecture du tube de cette commande
+	// 	input_fd = pipefd[0];
 	// }
-	// wait(NULL);
-
-	// char *const str_ls[3] = {"/usr/bin/ls", "-l", NULL}; // Commande "ls -l"
-
-	// // Exécution de la commande inexistante "xyz123"
-	// if (fork() == 0) {
-	//     execve("/votre_chemin/xyz123", str_xyz, NULL);
-	//     perror("execve xyz123");
-	//     exit(EXIT_FAILURE);
-	// }
-
-	// // Attendre que les processus fils se terminent
-	// wait(NULL);
 	return (0);
 }

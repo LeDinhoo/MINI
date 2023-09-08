@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/04 17:15:39 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/08 11:12:02 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	main(void)
 				break ;
 			add_history(mini.input);
 			mini.start = split_string(mini.input, &mini);
-			update_token_types(&mini);
 			if (pars_token(&mini))
 			{
+				update_token_types(&mini);
 				builtin_exec(&mini);
 				execution(&mini);
 				print_args(&mini);

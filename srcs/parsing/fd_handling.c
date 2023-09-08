@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:27:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/04 09:15:30 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/08 10:33:44 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,5 @@ void	setup_here_doc(t_mini *mini, char *limiter)
 	}
 	close(mini->here_doc_fd);
 }
+
+// void    apply_redirection()
