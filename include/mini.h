@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 16:50:48 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/19 11:19:41 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,14 @@ t_token				*echo_build(t_token *head);
 t_token				*split_string(const char *str, t_mini *mini);
 void				absolute_not_found(char *str);
 void				builtin_exec(t_mini *mini);
+void				update_in_quotes(t_parser *parser);
+
+// builtins.c
+int					builtin_exec(t_cmd *cmd);
+t_token				*echo_build(t_token *head);
+char				*get_git_branch(void);
+char				*get_prompt_str(void);
+int					minishell_cd(char *path);
 void				cd_build(t_mini *mini);
 void				cmd_args(t_mini *mini);
 void				find_redirection(t_token *current, t_expect *ex);
