@@ -33,6 +33,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
 		$(SRC_DIR)/srcs/exec/exec.c \
+		$(SRC_DIR)/srcs/signals/init_signals.c \
+		$(SRC_DIR)/srcs/signals/handle_signals.c \
 		$(SRC_DIR)/srcs/ft_dprintf.c \
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -86,6 +88,7 @@ re: fclean all
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/srcs
+	@mkdir -p $(OBJ_DIR)/srcs/signals/
 	@mkdir -p $(OBJ_DIR)/srcs/parsing/
 	@mkdir -p $(OBJ_DIR)/srcs/builtins/
 	@mkdir -p $(OBJ_DIR)/srcs/exec/

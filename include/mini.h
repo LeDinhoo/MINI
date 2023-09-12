@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/08 16:40:02 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/09/12 16:06:52 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,17 @@ int					pars_token(t_mini *mini);
 char				*pipe_prompt(void);
 char				*here_prompt(void);
 
+//srcs/signals/init_signals.c
+
+void	ft_init_signals(t_sig *sig);
+void	ft_check_malloc(t_sig *sig);
+
+//srcs/signals/handle_signals.c
+
+void	ft_set_signals_handle(t_sig *sig);
+void	ft_handle_signal_heredoc(int sig_heredoc);
+void	ft_handle_signal(int sig_prompt);
+void	ft_init_quit_handle(t_sig *sig);
 
 int	ft_dprintf(int fd, char *txt, ...);
 
