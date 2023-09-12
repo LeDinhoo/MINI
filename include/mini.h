@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 10:43:09 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/12 17:34:34 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ t_token				*split_string(const char *str, t_mini *mini);
 void				update_in_quotes(t_parser *parser);
 
 // builtins.c
-void				builtin_exec(t_mini *mini);
+int					builtin_exec(t_cmd *cmd);
 t_token				*echo_build(t_token *head);
 char				*get_git_branch(void);
 char				*get_prompt_str(void);
