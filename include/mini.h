@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/05 01:01:25 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/12 10:43:09 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,24 +92,30 @@ typedef struct s_parser
 	int				in_quotes;
 }					t_parser;
 
+typedef struct s_redir
+{
+	char			*input_file;
+	char			*output_file;
+	char			*append_file;
+	char			*heredoc_content;
+}					t_redir;
+
 typedef struct s_cmd
 {
 	char			*cmd;
 	char			*cmd_path;
 	char			**cmd_args;
-	///
-	char			*output_file;
+	struct s_redir	redir;
+	int				is_last;
 	struct s_cmd	*next;
 }					t_cmd;
 
 typedef struct s_mini
 {
-	int				is_pipe;
 	int				is_here_doc;
-	int				is_input;
 	int				here_doc_fd;
-	char			*infile;
-	char			*outfile;
+	int				nb_steps;
+	int				input_fd;
 	///
 	char			*input;
 	char			**env;
@@ -176,5 +182,6 @@ void				setup_here_doc(t_mini *mini, char *limiter);
 int					pars_token(t_mini *mini);
 char				*pipe_prompt(void);
 char				*here_prompt(void);
+int					is_here_doc(t_token *current);
 
 #endif

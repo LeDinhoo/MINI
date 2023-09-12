@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/04 17:34:12 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/12 10:42:35 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	update_token_types(t_mini *mini)
 	current = mini->start;
 	while (current != NULL)
 	{
+		if (is_here_doc(current))
+			setup_here_doc(mini, current->next->str);
 		if (current->next && redirection == 1)
 		{
 			current = current->next;
