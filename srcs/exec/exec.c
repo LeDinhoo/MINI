@@ -6,43 +6,43 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/08 11:17:55 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/12 11:01:53 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-void	not_found(t_cmd *node)
+void	not_found(char *str)
 {
 	ft_printf("mini: command not found:");
-	ft_printf(" %s\n", node->cmd);
+	ft_printf(" %s\n", str);
 	// free(node->cmd);
 	// free(node);
 }
 
-void	absolute_not_found(t_cmd *node)
+void	absolute_not_found(char *str)
 {
 	ft_printf("mini: No such file or directory: ");
-	ft_printf("%s\n", node->cmd);
+	ft_printf("%s\n", str);
 	// free(node->cmd);
 	// free(node);
 }
 
-int	handle_absolute_path(t_cmd *node)
+int	handle_absolute_path(t_cmd *node, char *str)
 {
-	if (access(node->cmd, F_OK | X_OK) == 0)
+	if (access(str, F_OK | X_OK) == 0)
 	{
 		node->cmd_path = ft_strdup(node->cmd);
 		return (1);
 	}
 	else
 	{
-		absolute_not_found(node);
+		absolute_not_found(str);
 		return (0);
 	}
 }
 
-int	access_path(char **env, t_cmd *node)
+int	access_path(char **env, t_cmd *node, char *str)
 {
 	char	*tmp;
 	char	*path;
@@ -51,7 +51,7 @@ int	access_path(char **env, t_cmd *node)
 	i = 0;
 	while (env[i])
 	{
-		tmp = node->cmd;
+		tmp = str;
 		path = ft_strdup(env[i]);
 		path = ft_strjoin(path, "/");
 		tmp = ft_strjoin(path, tmp);
@@ -64,20 +64,20 @@ int	access_path(char **env, t_cmd *node)
 		i++;
 		free(tmp);
 	}
-	not_found(node);
+	not_found(str);
 	return (0);
 }
 
-int	handle_path(char **env, t_cmd *node)
+int	handle_path(char **env, t_cmd *node, char *str)
 {
-	if (node->cmd[0] == '/' || (node->cmd[0] == '.' && node->cmd[1] == '/'))
+	if (str[0] == '/' || (str[0] == '.' && str[1] == '/'))
 	{
-		if (handle_absolute_path(node))
+		if (handle_absolute_path(node, str))
 			return (1);
 		else
 			return (0);
 	}
-	if (access_path(env, node))
+	if (access_path(env, node, str))
 		return (1);
 	else
 		return (0);
@@ -109,7 +109,7 @@ void	print_args(t_mini *mini)
 	if (mini->cmd_tab == NULL)
 		return ;
 	current = mini->cmd_tab;
-	while (current != NULL && current->cmd != NULL)
+	while (current != NULL)
 	{
 		ft_printf("---- Command ----\ncmd : %s\n", current->cmd);
 		ft_printf("path : %s\n", current->cmd_path);
@@ -121,7 +121,8 @@ void	print_args(t_mini *mini)
 		ft_printf("--- Redirection ---\noutput : %s\n",
 			current->redir.output_file);
 		ft_printf("append : %s\n", current->redir.append_file);
-		ft_printf("input : %s\n\n", current->redir.input_file);
+		ft_printf("input : %s\n", current->redir.input_file);
+		ft_printf("heredoc : %s\n\n", current->redir.heredoc_content);
 		current = current->next;
 		i = 0;
 	}
@@ -140,6 +141,7 @@ t_cmd	*create_new_cmd(void)
 	node->cmd = NULL;
 	node->cmd_path = NULL;
 	node->cmd_args = NULL;
+	node->is_last = 0;
 	node->redir.output_file = NULL;
 	node->redir.append_file = NULL;
 	node->redir.input_file = NULL;
@@ -172,9 +174,10 @@ void	handle_append_redirection(t_cmd *cmd, const char *filename)
 }
 
 // Fonction pour gérer le here-document (<<)
-void	handle_heredoc(t_cmd *cmd, const char *content)
+void	handle_heredoc(t_cmd *cmd, const char *filename)
 {
 	// Enregistrez le contenu du here-document
+	cmd->redir.heredoc_content = strdup(filename);
 	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
 }
 
@@ -184,6 +187,8 @@ void	handle_arg(t_cmd *cmd, const char *argument)
 	int	num_args;
 
 	num_args = 0;
+	if (!cmd)
+		return ;
 	if (cmd->cmd_args)
 	{
 		while (cmd->cmd_args[num_args] != NULL)
@@ -207,8 +212,8 @@ void	handle_cmd(t_mini *mini, t_cmd **head, t_token *start, t_cmd *node)
 	node->cmd = ft_strdup(start->str);
 	// if (!handle_path(mini->env, node))
 	// {
-    //     // return;
-    // }
+	//     // return ;
+	// }
 	handle_arg(node, start->str);
 	return ;
 }
@@ -231,9 +236,9 @@ void	cmd_args(t_mini *mini)
 	expecting_append = 0;
 	expecting_heredoc = 0;
 	current_cmd = NULL; // La commande en cours de traitement
-    new_cmd = 0;
-    while (current != NULL)
-    {
+	new_cmd = 0;
+	while (current != NULL)
+	{
 		if (new_cmd == 0)
 		{
 			current_cmd = create_new_cmd();
@@ -273,7 +278,7 @@ void	cmd_args(t_mini *mini)
 			}
 			else
 			{
-				// Traitez la commande normalement
+				handle_path(mini->env, current_cmd, current->str);
 				handle_cmd(mini, &mini->cmd_tab, current, current_cmd);
 			}
 		}
@@ -335,16 +340,8 @@ void	cmd_args(t_mini *mini)
 		}
 		if (current != NULL && (current->next == NULL || current->type == PIPE))
 		{
-			if (current->type == PIPE)
-			{
-				add_cmd_node(current_cmd, &mini->cmd_tab);
-				new_cmd = 0;
-			}
-			else
-			{
-				add_cmd_node(current_cmd, &mini->cmd_tab);
-				new_cmd = 0;
-			}
+			add_cmd_node(current_cmd, &mini->cmd_tab);
+			new_cmd = 0;
 		}
 		current = current->next;
 	}
@@ -380,7 +377,7 @@ void	free_cmd(t_mini *mini)
 int	cmd_numbers(t_cmd *cmd)
 {
 	t_cmd	*current;
-	int			nb;
+	int		nb;
 
 	current = cmd;
 	nb = 0;
@@ -392,69 +389,171 @@ int	cmd_numbers(t_cmd *cmd)
 	return (nb);
 }
 
+void	wait_for_children(int nb_steps)
+{
+	int	i;
+	int	j;
+
+	j = nb_steps;
+	i = 0;
+	while (i < j)
+	{
+		i++;
+		wait(NULL);
+	}
+}
+
+int	is_only(t_mini *mini)
+{
+	t_cmd	*current;
+	int		i;
+
+	i = 0;
+	current = mini->cmd_tab;
+	while (current)
+	{
+		current = current->next;
+		i++;
+	}
+	return (i);
+}
+
+void	set_last_cmd(t_mini *mini)
+{
+	t_cmd	*current;
+	t_cmd	*last;
+
+	current = mini->cmd_tab;
+	while (current)
+	{
+		last = current;
+		current = current->next;
+	}
+	last->is_last = 1;
+}
+
+void	apply_redirection(t_mini *mini, t_cmd *current)
+{
+	int	output_fd;
+	int	input_fd;
+	int	append_fd;
+	int	heredoc_fd;
+
+	if (current->redir.output_file)
+	{
+		output_fd = open(current->redir.output_file,
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (output_fd == -1)
+		{
+			perror("Invalid file descriptor");
+			exit(EXIT_FAILURE);
+		}
+		dup2(output_fd, STDOUT_FILENO);
+		close(output_fd);
+	}
+	if (current->redir.append_file)
+	{
+		append_fd = open(current->redir.append_file,
+			O_CREAT | O_RDWR | O_APPEND, 0644);
+		if (append_fd == -1)
+		{
+			perror("Invalid file descriptor");
+			exit(EXIT_FAILURE);
+		}
+		dup2(append_fd, STDOUT_FILENO);
+		close(append_fd);
+	}
+	if (current->redir.input_file)
+	{
+		input_fd = open(current->redir.input_file, O_RDONLY);
+		if (input_fd == -1)
+		{
+			perror("Invalid file descriptor");
+			exit(EXIT_FAILURE);
+		}
+		dup2(input_fd, STDIN_FILENO);
+		close(input_fd);
+	}
+	if (current->redir.heredoc_content)
+	{
+        heredoc_fd = open("/tmp/.pipex_here_doc", O_RDONLY);
+        if (heredoc_fd == -1)
+        {
+			perror("Invalid file descriptor");
+			exit(EXIT_FAILURE);
+		}
+		dup2(heredoc_fd, STDIN_FILENO);
+		close(heredoc_fd);
+	}
+}
+
+void	execute_cmd(t_mini *pip, t_cmd *current, int pipe_fd[2], int i)
+{
+	if (current->cmd && current->is_last == 1)
+		dup2(STDOUT_FILENO, STDOUT_FILENO);
+	if (i != 0)
+	{
+		if (pip->input_fd != 0)
+		{
+			dup2(pip->input_fd, STDIN_FILENO);
+			close(pip->input_fd);
+		}
+	}
+	if (current->cmd && current->is_last == 0)
+	{
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+	}
+	if (current->redir.output_file || current->redir.input_file
+		|| current->redir.append_file || current->redir.heredoc_content)
+	{
+		apply_redirection(pip, current);
+	}
+	if (current->cmd)
+	{
+		execve(current->cmd_path, current->cmd_args, NULL);
+		exit(1);
+	}
+	else
+		exit(1);
+}
+
+void	iterate_commands(t_mini *mini)
+{
+	int		pipe_fd[2];
+	int		i;
+	t_cmd	*current;
+
+	i = 0;
+	current = mini->cmd_tab;
+	mini->input_fd = 0;
+	while (current)
+	{
+		if (current->is_last == 0)
+			pipe(pipe_fd);
+		if (fork() == 0)
+			execute_cmd(mini, current, pipe_fd, i);
+		if (i != 0)
+			close(mini->input_fd);
+		if (current->is_last == 0)
+		{
+			close(pipe_fd[1]);
+			mini->input_fd = pipe_fd[0];
+		}
+		current = current->next;
+		i++;
+	}
+}
+
 int	execution(t_mini *mini)
 {
 	cmd_args(mini);
-	//////////////////////////////////////////////////////
-	// t_cmd *current;
-	// int num_pipes;
-	// int pipefd[2];
-	// pid_t pid;
-	// int i;
-
-	// int input_fd = STDIN_FILENO; // Initialisez l'entrée au terminal
-	// current = mini->cmd_tab;
-	// num_pipes = cmd_numbers(mini->cmd_tab);
-	// for (i = 0; i < num_pipes; i++)
-	// {
-	// 	// Créez un tube (pipe) pour chaque paire de commandes
-	// 	if (pipe(pipefd) == -1)
-	// 	{
-	// 		perror("pipe");
-	// 		exit(EXIT_FAILURE);
-	// 	}
-
-	// 	// Créez un nouveau processus
-	// 	pid = fork();
-	// 	if (pid == -1)
-	// 	{
-	// 		perror("fork");
-	// 		exit(EXIT_FAILURE);
-	// 	}
-
-	// 	if (pid == 0) // Processus enfant
-	// 	{
-	// 		// Redirigez l'entrée standard (STDIN) vers le tube d'entrée de la première commande
-	// 		if (i == 0)
-	// 			dup2(input_fd, STDIN_FILENO);
-	// 		else
-	// 			dup2(pipefd[0], STDIN_FILENO);
-
-	// 		// Redirigez la sortie standard (STDOUT) vers le tube de sortie de la commande actuelle
-	// 		if (i < num_pipes - 1)
-	// 			dup2(pipefd[1], STDOUT_FILENO);
-
-	// 		// Fermez les extrémités inutilisées du tube
-	// 		close(pipefd[0]);
-	// 		close(pipefd[1]);
-
-	// 		// Exécutez la commande actuelle
-	// 		execlp("ls", "ls", NULL); // Remplacez "ls" par votre commande
-	// 		perror("execlp");
-	// 		exit(EXIT_FAILURE);
-	// 	}
-	// 	else // Processus parent
-	// 	{
-	// 		// Fermez l'extrémité de lecture du tube de la commande précédente
-	// 		if (i > 0)
-	// 			close(pipefd[0]);
-
-	// 		// Attendez que le processus enfant se termine
-	// 		wait(NULL);
-	// 	}
-
-	// 	// L'entrée pour la prochaine commande est l'extrémité de lecture du tube de cette commande
-	// 	input_fd = pipefd[0];
-	// }
+	mini->nb_steps = cmd_numbers(mini->cmd_tab);
+	if (is_only(mini) == 0)
+		return (0);
+	set_last_cmd(mini);
+	iterate_commands(mini);
+	wait_for_children(mini->nb_steps);
 	return (0);
 }
