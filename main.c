@@ -6,19 +6,21 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 16:25:06 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 14:02:41 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
 	char	*prompt;
 
-	init_struct(&mini);
-	while (1)
+    (void)argc;
+    (void)argv;
+    init_struct(&mini, envp);
+    while (1)
 	{
 		prompt = get_prompt_str();
 		mini.input = readline(prompt);

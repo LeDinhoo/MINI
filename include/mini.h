@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 13:39:25 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 14:03:02 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ typedef struct s_mini
 void				get_path(t_mini *mini);
 // init.c :
 
-void				init_struct(t_mini *mini);
+void				init_struct(t_mini *mini, char **envp);
 // node_management.c :
 
 void				add_node(t_token **head, char *str, int type);
