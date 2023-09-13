@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 11:01:53 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 13:49:14 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	handle_absolute_path(t_cmd *node, char *str)
 {
 	if (access(str, F_OK | X_OK) == 0)
 	{
-		node->cmd_path = ft_strdup(node->cmd);
+		node->cmd_path = ft_strdup(str);
 		return (1);
 	}
 	else
@@ -204,7 +204,7 @@ void	handle_arg(t_cmd *cmd, const char *argument)
 	cmd->cmd_args[num_args + 1] = NULL;
 }
 
-void	handle_cmd(t_mini *mini, t_cmd **head, t_token *start, t_cmd *node)
+void	handle_cmd(t_token *start, t_cmd *node)
 {
 	// Enregistrez le nom de la commande
 	if (!node || !start)
@@ -279,7 +279,7 @@ void	cmd_args(t_mini *mini)
 			else
 			{
 				handle_path(mini->env, current_cmd, current->str);
-				handle_cmd(mini, &mini->cmd_tab, current, current_cmd);
+				handle_cmd(current, current_cmd);
 			}
 		}
 		else if (current->type == ARG)
@@ -432,7 +432,7 @@ void	set_last_cmd(t_mini *mini)
 	last->is_last = 1;
 }
 
-void	apply_redirection(t_mini *mini, t_cmd *current)
+void	apply_redirection(t_cmd *current)
 {
 	int	output_fd;
 	int	input_fd;
@@ -476,9 +476,9 @@ void	apply_redirection(t_mini *mini, t_cmd *current)
 	}
 	if (current->redir.heredoc_content)
 	{
-        heredoc_fd = open("/tmp/.pipex_here_doc", O_RDONLY);
-        if (heredoc_fd == -1)
-        {
+		heredoc_fd = open("/tmp/.pipex_here_doc", O_RDONLY);
+		if (heredoc_fd == -1)
+		{
 			perror("Invalid file descriptor");
 			exit(EXIT_FAILURE);
 		}
@@ -508,11 +508,11 @@ void	execute_cmd(t_mini *pip, t_cmd *current, int pipe_fd[2], int i)
 	if (current->redir.output_file || current->redir.input_file
 		|| current->redir.append_file || current->redir.heredoc_content)
 	{
-		apply_redirection(pip, current);
+		apply_redirection(current);
 	}
 	if (current->cmd)
 	{
-		execve(current->cmd_path, current->cmd_args, NULL);
+		execve(current->cmd_path, current->cmd_args, pip->envp);
 		exit(1);
 	}
 	else

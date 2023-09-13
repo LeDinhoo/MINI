@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 10:42:35 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/12 13:57:51 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ void	is_cmd(t_token *current, char **env, int i)
 void	update_token_types(t_mini *mini)
 {
 	t_token	*current;
-	int		i;
 	int		redirection;
 
-	i = 0;
 	redirection = 0;
 	current = mini->start;
 	while (current != NULL)

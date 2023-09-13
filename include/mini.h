@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 10:43:09 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 13:39:25 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_mini
 	///
 	char			*input;
 	char			**env;
+	char			**envp;
 	struct s_token	*start;
 	struct s_cmd	*cmd_tab;
 }					t_mini;

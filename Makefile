@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc -g3
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) 
 
