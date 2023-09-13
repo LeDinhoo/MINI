@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 13:49:14 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 15:48:26 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -487,8 +487,45 @@ void	apply_redirection(t_cmd *current)
 	}
 }
 
+// void	ft_close(int fd)
+// {
+// 	if (fd > 0)
+// 		close(fd);
+// }
+
+// int	error_message(char *path)
+// {
+// 	DIR	*folder;
+// 	int	fd;
+// 	int	ret;
+
+// 	fd = open(path, O_WRONLY);
+// 	folder = opendir(path);
+// 	ft_putstr_fd("minishell: ", 2);
+// 	ft_putstr_fd(path, 2);
+// 	if (ft_strchr(path, '/') == NULL)
+// 		ft_putendl_fd(": command not found", 2);
+// 	else if (fd == -1 && folder == NULL)
+// 		ft_putendl_fd(": No such file or directory", 2);
+// 	else if (fd == -1 && folder != NULL)
+// 		ft_putendl_fd(": is a directory", 2);
+// 	else if (fd != -1 && folder == NULL)
+// 		ft_putendl_fd(": Permission denied", 2);
+// 	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
+// 		ret = UNKNOWN_COMMAND;
+// 	else
+// 		ret = IS_DIRECTORY;
+// 	if (folder)
+// 		closedir(folder);
+// 	ft_close(fd);
+// 	return (ret);
+// }
+
 void	execute_cmd(t_mini *pip, t_cmd *current, int pipe_fd[2], int i)
 {
+	// int	ret;
+
+	// ret = SUCCESS;
 	if (current->cmd && current->is_last == 1)
 		dup2(STDOUT_FILENO, STDOUT_FILENO);
 	if (i != 0)
@@ -512,7 +549,10 @@ void	execute_cmd(t_mini *pip, t_cmd *current, int pipe_fd[2], int i)
 	}
 	if (current->cmd)
 	{
-		execve(current->cmd_path, current->cmd_args, pip->envp);
+		if (ft_strchr(current->cmd_path, '/') != NULL)
+			execve(current->cmd_path, current->cmd_args, pip->envp);
+		// ret = error_message(current->cmd_path);
+		free(current->cmd);
 		exit(1);
 	}
 	else
@@ -550,6 +590,7 @@ int	execution(t_mini *mini)
 {
 	cmd_args(mini);
 	mini->nb_steps = cmd_numbers(mini->cmd_tab);
+	// ft_printf("%d\n", mini->nb_steps);
 	if (is_only(mini) == 0)
 		return (0);
 	set_last_cmd(mini);

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 14:03:02 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 15:28:39 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@
 # define PIPE 6
 # define END 7
 # define HEREDOC 8
+
+# define BUFF_SIZE 4096
+# define EXPANSION -36
+# define ERROR 1
+# define SUCCESS 0
+# define IS_DIRECTORY 126
+# define UNKNOWN_COMMAND 127
 
 // ERROR
 # define PIPE_ERR "Syntax error: \"|\" unexpected"
