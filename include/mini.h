@@ -6,7 +6,7 @@
 /*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 17:34:34 by clement          ###   ########.fr       */
+/*   Updated: 2023/09/14 18:58:07 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,13 @@ char				*get_git_branch(void);
 char				*get_prompt_str(void);
 int					minishell_cd(char *path);
 void				cd_build(t_mini *mini);
+
+//srcs/buitltins/cd.c
+void	cd_build(t_cmd *cmd);
+void	ft_go_home(t_cmd *cmd, char *path, char *old_pwd);
+void	ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
+void	ft_update_env(t_cmd * cmd, char *path);
+
 
 // exec.c
 int					execution(t_mini *mini);
