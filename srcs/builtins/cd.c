@@ -6,7 +6,11 @@
 /*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:08:29 by hdupuy            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/09/19 11:16:12 by cbacquet         ###   ########.fr       */
+=======
+/*   Updated: 2023/09/14 19:02:43 by clement          ###   ########.fr       */
+>>>>>>> cd en cours
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +97,7 @@ int	minishell_cd(char *path)
 void	cd_build(t_cmd *cmd)
 {
 	char	*path;
-	char	*current_pwd;
+	char	*old_pwd;
 
 	path = NULL;
 	if (cmd->cmd_args[1] && cmd->cmd_args[2])
@@ -101,12 +105,12 @@ void	cd_build(t_cmd *cmd)
 		write(1, "minishell : cd : too many argmuents\n", 19);
 		return ;
 	}
-	current_pwd = getcwd(NULL, 0);
+	old_pwd = getcwd(NULL, 0);
 	if (cmd->cmd_args[0] && cmd->cmd_args[1] == NULL)
-		return (ft_go_home(cmd, path));
+		return (ft_go_home(cmd, path, old_pwd));
 	else if (cmd->cmd_args[1][0] == '-' && cmd->cmd_args[1][1] == '\0')
 	{
-		ft_go_back_path(cmd, path);
+		ft_go_back_path(cmd, path, old_pwd);
 		return ;	
 	}
 	 
@@ -115,30 +119,34 @@ void	cd_build(t_cmd *cmd)
 		ft_update_env(cmd, path);
 	}
 	
-	if (current && current->str && strcmp(current->str, "cd") == 0)
+	/*if (current && current->str && strcmp(current->str, "cd") == 0)
 	{
 		if (current->next)
 			minishell_cd(current->next->str);
 		else
 			minishell_cd("");
-	}
+	}*/
 }
 
-void	ft_go_home(t_cmd *cmd, char *path)
+void	ft_go_home(t_cmd *cmd, char *path, char *old_pwd)
 {
+	char *tmp_path;
+	char *home;
+
+	tmp_path = getenv("PWD");
+	home = getenv("HOME");
 	
 }
 
-void	ft_go_back_path(t_cmd *cmd, char *path)
+void	ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd)
 {
 	char *old_path;
 	
 	old_path = getenv("PWD");
-	
-	path = ge(cmd->)
+	path = getenv("OLDPWD");
 }
 
-void	ft_update_path(t_cmd * cmd, char *path)
+void	ft_update_env(t_cmd * cmd, char *path)
 {
 	
 }

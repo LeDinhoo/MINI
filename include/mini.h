@@ -6,7 +6,11 @@
 /*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/09/19 11:19:41 by cbacquet         ###   ########.fr       */
+=======
+/*   Updated: 2023/09/14 18:58:07 by clement          ###   ########.fr       */
+>>>>>>> cd en cours
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,9 +219,23 @@ void				handle_end_of_string(t_token **head, t_split *tkn,
 						const char *str);
 void				free_without_cmd(t_mini *mini);
 
+<<<<<<< HEAD
 // command_processing.c
 void				update_token_types(t_mini *mini);
 void				is_cmd(t_token *current, char **env, int i);
+=======
+//srcs/buitltins/cd.c
+void	cd_build(t_cmd *cmd);
+void	ft_go_home(t_cmd *cmd, char *path, char *old_pwd);
+void	ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
+void	ft_update_env(t_cmd * cmd, char *path);
+
+
+// exec.c
+int					execution(t_mini *mini);
+void				free_cmd(t_mini *mini);
+void				print_args(t_mini *mini);
+>>>>>>> cd en cours
 
 // error_handling.c
 int					pipe_error(t_token *current);
