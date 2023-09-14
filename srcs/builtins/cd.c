@@ -36,7 +36,7 @@ char	*get_prompt_str(void)
 	memset(prompt, 0, sizeof(prompt));
 	strcat(prompt, "\033[34mMiniShell\033[92m➜\033[0m \033[96m");
 	strncat(prompt, directory, PATH_MAX - strlen(prompt) - 1);
-	strcat(prompt, " \033[33m\033[0m");
+	strcat(prompt, " \033[33m❯\033[0m");
 	strcat(prompt, "\033[33m\033[0m");
 	strcat(prompt, " ");
 	return (prompt);

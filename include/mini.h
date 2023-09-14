@@ -107,6 +107,14 @@ typedef struct s_redir
 	char			*heredoc_content;
 }					t_redir;
 
+typedef struct s_expect
+{
+	int		input;
+	int		output;
+	int		append;
+	int		heredoc;
+}	t_expect;
+
 typedef struct s_cmd
 {
 	char			*cmd;

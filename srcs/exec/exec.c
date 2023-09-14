@@ -16,16 +16,12 @@ void	not_found(char *str)
 {
 	ft_printf("mini: command not found:");
 	ft_printf(" %s\n", str);
-	// free(node->cmd);
-	// free(node);
 }
 
 void	absolute_not_found(char *str)
 {
 	ft_printf("mini: No such file or directory: ");
 	ft_printf("%s\n", str);
-	// free(node->cmd);
-	// free(node);
 }
 
 int	handle_absolute_path(t_cmd *node, char *str)
@@ -153,32 +149,25 @@ t_cmd	*create_new_cmd(void)
 // Fonction pour gérer la redirection d'entrée (<)
 void	handle_input_redirection(t_cmd *cmd, const char *filename)
 {
-	// Enregistrez le nom du fichier d'entrée
 	cmd->redir.input_file = strdup(filename);
 }
 
 // Fonction pour gérer la redirection de sortie (>)
 void	handle_output_redirection(t_cmd *cmd, const char *filename)
 {
-	// Enregistrez le nom du fichier de sortie
 	cmd->redir.output_file = ft_strdup(filename);
-	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
 }
 
 // Fonction pour gérer la redirection de sortie en mode ajout (>>)
 void	handle_append_redirection(t_cmd *cmd, const char *filename)
 {
-	// Enregistrez le nom du fichier de sortie en mode ajout
 	cmd->redir.append_file = strdup(filename);
-	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
 }
 
 // Fonction pour gérer le here-document (<<)
 void	handle_heredoc(t_cmd *cmd, const char *filename)
 {
-	// Enregistrez le contenu du here-document
 	cmd->redir.heredoc_content = strdup(filename);
-	// Utilisez t_redirection ou une structure similaire pour gérer plusieurs types de redirection
 }
 
 // Fonction pour gérer une commande
@@ -206,37 +195,91 @@ void	handle_arg(t_cmd *cmd, const char *argument)
 
 void	handle_cmd(t_token *start, t_cmd *node)
 {
-	// Enregistrez le nom de la commande
 	if (!node || !start)
 		return ;
 	node->cmd = ft_strdup(start->str);
-	// if (!handle_path(mini->env, node))
-	// {
-	//     // return ;
-	// }
 	handle_arg(node, start->str);
 	return ;
 }
 
-// Fonction pour gérer un argument
+int	handle_redirection(t_cmd *current_cmd, t_token *current, t_expect *ex)
+{
+	if (ex->input)
+	{
+		handle_input_redirection(current_cmd, current->str);
+		ex->input = 0;
+		return (1);
+	}
+	else if (ex->output)
+	{
+		handle_output_redirection(current_cmd, current->str);
+		ex->output = 0;
+		return (1);
+	}
+	else if (ex->append)
+	{
+		handle_append_redirection(current_cmd, current->str);
+		ex->append = 0;
+		return (1);
+	}
+	else if (ex->heredoc)
+	{
+		handle_heredoc(current_cmd, current->str);
+		ex->heredoc = 0;
+		return (1);
+	}
+	return (0);
+}
+
+void	init_expect(t_expect *ex)
+{
+	ex->input = 0;
+	ex->output = 0;
+	ex->append = 0;
+	ex->heredoc = 0;
+}
+
+void	find_redirection(t_token *current, t_expect *ex)
+{
+	if (current->type == INPUT)
+		ex->input = 1;
+	else if (current->type == TRUNC)
+		ex->output = 1;
+	else if (current->type == APPEND)
+		ex->append = 1;
+	else if (current->type == HEREDOC)
+		ex->heredoc = 1;
+}
+
+void	setup_command(t_mini *mini, t_token *current, t_cmd *current_cmd,
+		t_expect *ex)
+{
+	if (current->type == CMD)
+	{
+		if (handle_redirection(current_cmd, current, ex) == 0)
+		{
+			handle_path(mini->env, current_cmd, current->str);
+			handle_cmd(current, current_cmd);
+		}
+	}
+	else if (current->type == ARG)
+	{
+		if (handle_redirection(current_cmd, current, ex) == 0)
+			handle_arg(current_cmd, current->str);
+	}
+}
 
 void	cmd_args(t_mini *mini)
 {
-	t_token	*current;
-	int		expecting_input;
-	int		expecting_output;
-	int		expecting_append;
-	int		expecting_heredoc;
-	int		new_cmd;
-	t_cmd	*current_cmd;
+	int				new_cmd;
+	struct s_expect	ex;
+	t_token			*current;
+	t_cmd			*current_cmd;
 
 	current = mini->start;
-	expecting_input = 0;
-	expecting_output = 0;
-	expecting_append = 0;
-	expecting_heredoc = 0;
-	current_cmd = NULL; // La commande en cours de traitement
+	current_cmd = NULL;
 	new_cmd = 0;
+	init_expect(&ex);
 	while (current != NULL)
 	{
 		if (new_cmd == 0)
@@ -244,100 +287,8 @@ void	cmd_args(t_mini *mini)
 			current_cmd = create_new_cmd();
 			new_cmd = 1;
 		}
-		if (current->type == CMD)
-		{
-			// Créez une nouvelle structure t_cmd pour la commande actuelle
-			// current_cmd = create_new_cmd();
-			if (expecting_input)
-			{
-				// Le token précédent était un opérateur de redirection (<)
-				// Traitez-le comme un nom de fichier d'entrée pour la commande précédente
-				handle_input_redirection(current_cmd, current->str);
-				expecting_input = 0;
-			}
-			else if (expecting_output)
-			{
-				// Le token précédent était un opérateur de redirection (>)
-				// Traitez-le comme un nom de fichier de sortie
-				handle_output_redirection(current_cmd, current->str);
-				expecting_output = 0;
-			}
-			else if (expecting_append)
-			{
-				// Le token précédent était un opérateur de redirection (>>)
-				// Traitez-le comme un nom de fichier de sortie en mode ajout
-				handle_append_redirection(current_cmd, current->str);
-				expecting_append = 0;
-			}
-			else if (expecting_heredoc)
-			{
-				// Le token précédent était un opérateur de here-document (<<)
-				// Traitez-le comme le contenu du here-document
-				handle_heredoc(current_cmd, current->str);
-				expecting_heredoc = 0;
-			}
-			else
-			{
-				handle_path(mini->env, current_cmd, current->str);
-				handle_cmd(current, current_cmd);
-			}
-		}
-		else if (current->type == ARG)
-		{
-			if (expecting_input)
-			{
-				// Le token précédent était un opérateur de redirection (<)
-				// Traitez-le comme un nom de fichier d'entrée pour la commande précédente
-				handle_input_redirection(current_cmd, current->str);
-				expecting_input = 0;
-			}
-			else if (expecting_output)
-			{
-				// Le token précédent était un opérateur de redirection (>)
-				// Traitez-le comme un nom de fichier de sortie
-				handle_output_redirection(current_cmd, current->str);
-				expecting_output = 0;
-			}
-			else if (expecting_append)
-			{
-				// Le token précédent était un opérateur de redirection (>>)
-				// Traitez-le comme un nom de fichier de sortie en mode ajout
-				handle_append_redirection(current_cmd, current->str);
-				expecting_append = 0;
-			}
-			else if (expecting_heredoc)
-			{
-				// Le token précédent était un opérateur de here-document (<<)
-				// Traitez-le comme le contenu du here-document
-				handle_heredoc(current_cmd, current->str);
-				expecting_heredoc = 0;
-			}
-			else
-			{
-				// Traitez l'argument normalement
-				handle_arg(current_cmd, current->str);
-			}
-		}
-		else if (current->type == INPUT)
-		{
-			// Marquez que nous attendons une redirection d'entrée
-			expecting_input = 1;
-		}
-		else if (current->type == TRUNC)
-		{
-			// Marquez que nous attendons une redirection de sortie >
-			expecting_output = 1;
-		}
-		else if (current->type == APPEND)
-		{
-			// Marquez que nous attendons une redirection de sortie >>
-			expecting_append = 1;
-		}
-		else if (current->type == HEREDOC)
-		{
-			// Marquez que nous attendons un here-document <<
-			expecting_heredoc = 1;
-		}
+		setup_command(mini, current, current_cmd, &ex);
+		find_redirection(current, &ex);
 		if (current != NULL && (current->next == NULL || current->type == PIPE))
 		{
 			add_cmd_node(current_cmd, &mini->cmd_tab);
@@ -432,59 +383,78 @@ void	set_last_cmd(t_mini *mini)
 	last->is_last = 1;
 }
 
-void	apply_redirection(t_cmd *current)
+void	apply_output(t_cmd *current)
 {
 	int	output_fd;
-	int	input_fd;
+
+	output_fd = 0;
+	output_fd = open(current->redir.output_file, O_WRONLY | O_CREAT | O_TRUNC,
+			0644);
+	if (output_fd == -1)
+	{
+		perror("Invalid file descriptor");
+		exit(EXIT_FAILURE);
+	}
+	dup2(output_fd, STDOUT_FILENO);
+	close(output_fd);
+}
+
+void	apply_append(t_cmd *current)
+{
 	int	append_fd;
+
+	append_fd = 0;
+	append_fd = open(current->redir.append_file, O_CREAT | O_RDWR | O_APPEND,
+			0644);
+	if (append_fd == -1)
+	{
+		perror("Invalid file descriptor");
+		exit(EXIT_FAILURE);
+	}
+	dup2(append_fd, STDOUT_FILENO);
+	close(append_fd);
+}
+
+void	apply_input(t_cmd *current)
+{
+	int	input_fd;
+
+	input_fd = 0;
+	input_fd = open(current->redir.input_file, O_RDONLY);
+	if (input_fd == -1)
+	{
+		perror("Invalid file descriptor");
+		exit(EXIT_FAILURE);
+	}
+	dup2(input_fd, STDIN_FILENO);
+	close(input_fd);
+}
+
+void	apply_heredoc(void)
+{
 	int	heredoc_fd;
 
+	heredoc_fd = 0;
+	heredoc_fd = open("/tmp/.pipex_here_doc", O_RDONLY);
+	if (heredoc_fd == -1)
+	{
+		perror("Invalid file descriptor");
+		exit(EXIT_FAILURE);
+	}
+	dup2(heredoc_fd, STDIN_FILENO);
+	close(heredoc_fd);
+}
+
+void	apply_redirection(t_cmd *current)
+{
 	if (current->redir.output_file)
-	{
-		output_fd = open(current->redir.output_file,
-			O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (output_fd == -1)
-		{
-			perror("Invalid file descriptor");
-			exit(EXIT_FAILURE);
-		}
-		dup2(output_fd, STDOUT_FILENO);
-		close(output_fd);
-	}
+		apply_output(current);
 	if (current->redir.append_file)
-	{
-		append_fd = open(current->redir.append_file,
-			O_CREAT | O_RDWR | O_APPEND, 0644);
-		if (append_fd == -1)
-		{
-			perror("Invalid file descriptor");
-			exit(EXIT_FAILURE);
-		}
-		dup2(append_fd, STDOUT_FILENO);
-		close(append_fd);
-	}
+		apply_append(current);
 	if (current->redir.input_file)
-	{
-		input_fd = open(current->redir.input_file, O_RDONLY);
-		if (input_fd == -1)
-		{
-			perror("Invalid file descriptor");
-			exit(EXIT_FAILURE);
-		}
-		dup2(input_fd, STDIN_FILENO);
-		close(input_fd);
-	}
+		apply_input(current);
 	if (current->redir.heredoc_content)
-	{
-		heredoc_fd = open("/tmp/.pipex_here_doc", O_RDONLY);
-		if (heredoc_fd == -1)
-		{
-			perror("Invalid file descriptor");
-			exit(EXIT_FAILURE);
-		}
-		dup2(heredoc_fd, STDIN_FILENO);
-		close(heredoc_fd);
-	}
+		apply_heredoc();
 }
 
 // void	ft_close(int fd)
@@ -521,19 +491,14 @@ void	apply_redirection(t_cmd *current)
 // 	return (ret);
 // }
 
-void	execute_cmd(t_mini *pip, t_cmd *current, int pipe_fd[2], int i)
+void	pipe_redirection(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 {
-	// int	ret;
-
-	// ret = SUCCESS;
-	if (current->cmd && current->is_last == 1)
-		dup2(STDOUT_FILENO, STDOUT_FILENO);
 	if (i != 0)
 	{
-		if (pip->input_fd != 0)
+		if (mini->input_fd != 0)
 		{
-			dup2(pip->input_fd, STDIN_FILENO);
-			close(pip->input_fd);
+			dup2(mini->input_fd, STDIN_FILENO);
+			close(mini->input_fd);
 		}
 	}
 	if (current->cmd && current->is_last == 0)
@@ -542,15 +507,22 @@ void	execute_cmd(t_mini *pip, t_cmd *current, int pipe_fd[2], int i)
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 	}
+}
+
+void	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
+{
+	// int	ret;
+	// ret = SUCCESS;
+	if (current->cmd && current->is_last == 1)
+		dup2(STDOUT_FILENO, STDOUT_FILENO);
+	pipe_redirection(mini, current, pipe_fd, i);
 	if (current->redir.output_file || current->redir.input_file
 		|| current->redir.append_file || current->redir.heredoc_content)
-	{
 		apply_redirection(current);
-	}
 	if (current->cmd)
 	{
 		if (ft_strchr(current->cmd_path, '/') != NULL)
-			execve(current->cmd_path, current->cmd_args, pip->envp);
+			execve(current->cmd_path, current->cmd_args, mini->envp);
 		// ret = error_message(current->cmd_path);
 		free(current->cmd);
 		exit(1);
@@ -590,7 +562,6 @@ int	execution(t_mini *mini)
 {
 	cmd_args(mini);
 	mini->nb_steps = cmd_numbers(mini->cmd_tab);
-	// ft_printf("%d\n", mini->nb_steps);
 	if (is_only(mini) == 0)
 		return (0);
 	set_last_cmd(mini);
