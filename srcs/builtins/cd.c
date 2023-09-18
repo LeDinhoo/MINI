@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:08:29 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 09:19:27 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:35:44 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,15 @@ char	*get_prompt_str(t_mini *mini)
 			directory++;
 	}
 	memset(prompt, 0, sizeof(prompt));
+	strcat(prompt, "\033[90m╭─\033[0m");
 	strcat(prompt, "\033[34mMiniShell\033[92m ❯\033[0m \033[96m");
 	strcat(prompt, " ");
 	strncat(prompt, directory, PATH_MAX - strlen(prompt) - 1);
+	strcat(prompt, " \033[90m\n╰─\033[0m");
 	if (mini->ret == SUCCESS)
-		strcat(prompt, " \033[92m❯\033[0m");
+		strcat(prompt, "\033[92m❯\033[0m");
 	else
-		strcat(prompt, " \033[31m❯\033[0m");
+		strcat(prompt, "\033[31m❯\033[0m");
 	strcat(prompt, "\033[33m\033[0m");
 	strcat(prompt, " ");
 	return (prompt);
