@@ -109,11 +109,11 @@ typedef struct s_redir
 
 typedef struct s_expect
 {
-	int		input;
-	int		output;
-	int		append;
-	int		heredoc;
-}	t_expect;
+	int				input;
+	int				output;
+	int				append;
+	int				heredoc;
+}					t_expect;
 
 typedef struct s_cmd
 {
@@ -131,6 +131,7 @@ typedef struct s_mini
 	int				here_doc_fd;
 	int				nb_steps;
 	int				input_fd;
+	int				pid_value;
 	///
 	char			*input;
 	char			**env;

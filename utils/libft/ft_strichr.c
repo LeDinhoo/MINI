@@ -18,7 +18,10 @@ ssize_t	ft_strichr(char *s, int c)
 
 	i = 0;
 	while (s[i])
-		if (s[i++] == (char)c)
-			return (i - 1);
+	{
+		if (s[i] == (char)c)
+			return (i);
+		i++;
+	}
 	return (-1);
 }

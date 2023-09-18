@@ -536,6 +536,7 @@ void	iterate_commands(t_mini *mini)
 	int		pipe_fd[2];
 	int		i;
 	t_cmd	*current;
+	pid_t	pid;
 
 	i = 0;
 	current = mini->cmd_tab;
@@ -544,7 +545,8 @@ void	iterate_commands(t_mini *mini)
 	{
 		if (current->is_last == 0)
 			pipe(pipe_fd);
-		if (fork() == 0)
+		pid = fork();
+		if (pid == 0)
 			execute_cmd(mini, current, pipe_fd, i);
 		if (i != 0)
 			close(mini->input_fd);

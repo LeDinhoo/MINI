@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 				execution(&mini);
 				// print_args(&mini);
 			}
-			// print_list(mini.start);
+			print_list(mini.start);
 			free_list(mini.start);
 			free_cmd(&mini);
 			free(mini.input);
