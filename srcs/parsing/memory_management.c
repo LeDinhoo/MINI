@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/07/11 13:12:14 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:19:34 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,47 @@ void	free_env(t_mini *mini)
 		i++;
 	}
 	free(mini->env);
+}
+
+void	free_redir(t_cmd *current)
+{
+	free(current->redir.append_file);
+	free(current->redir.heredoc_content);
+	free(current->redir.input_file);
+	free(current->redir.output_file);
+}
+
+void	free_cmd(t_mini *mini)
+{
+	int		i;
+	t_cmd	*current;
+	t_cmd	*next;
+
+	current = mini->cmd_tab;
+	i = 0;
+	while (current)
+	{
+		next = current->next;
+		free(current->cmd);
+		free(current->cmd_path);
+		while (current->cmd_args && current->cmd_args[i])
+		{
+			free(current->cmd_args[i]);
+			i++;
+		}
+		free_redir(current);
+		free(current->cmd_args);
+		i = 0;
+		free(current);
+		current = next;
+	}
+	mini->cmd_tab = NULL;
+}
+
+void	free_all(t_mini *mini)
+{
+	free_list(mini->start);
+	free_cmd(mini);
+	free(mini->input);
+	free_env(mini);
 }

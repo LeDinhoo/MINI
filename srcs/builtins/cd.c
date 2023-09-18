@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:08:29 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 10:39:03 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:22:43 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	minishell_cd(char *path)
 
 void	cd_build(t_mini *mini)
 {
-	t_token *current;
+	t_token	*current;
 
 	current = mini->start;
 	if (current && current->str && strcmp(current->str, "cd") == 0)

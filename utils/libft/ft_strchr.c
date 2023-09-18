@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 13:00:41 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 15:21:31 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:21:31 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 char	*ft_strchr(const char *str, int c)
 {
-    if(!str)
-        return (NULL);
-    while (*str != '\0')
-    {
+	if (!str)
+		return (NULL);
+	while (*str != '\0')
+	{
 		if (*str == c)
 			return ((char *)str);
 		str++;

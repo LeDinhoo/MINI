@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 10:13:55 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:21:54 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	main(int argc, char **argv, char **envp)
 	init_struct(&mini, envp);
 	while (1)
 	{
-        prompt = get_prompt_str(&mini);
-        mini.input = readline(prompt);
+		prompt = get_prompt_str(&mini);
+		mini.input = readline(prompt);
 		if (mini.input != NULL)
 		{
 			if (strcmp(mini.input, "exit") == 0)
@@ -35,9 +35,7 @@ int	main(int argc, char **argv, char **envp)
 				update_token_types(&mini);
 				builtin_exec(&mini);
 				execution(&mini);
-				// print_args(&mini);
 			}
-			// print_list(mini.start);
 			free_list(mini.start);
 			free_cmd(&mini);
 			free(mini.input);

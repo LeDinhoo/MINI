@@ -33,6 +33,12 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
 		$(SRC_DIR)/srcs/exec/exec.c \
+		$(SRC_DIR)/srcs/exec/apply_redir.c \
+		$(SRC_DIR)/srcs/exec/handle_redir.c \
+		$(SRC_DIR)/srcs/exec/handle_path.c \
+		$(SRC_DIR)/srcs/exec/handle_cmd.c \
+		$(SRC_DIR)/srcs/exec/utils.c \
+		$(SRC_DIR)/srcs/exec/error_ret.c \
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

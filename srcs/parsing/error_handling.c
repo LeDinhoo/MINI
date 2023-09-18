@@ -6,17 +6,11 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 13:21:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 13:58:12 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:18:46 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
-
-void	print_error(char *action)
-{
-	ft_printf("mini: ");
-	ft_printf("%s\n", action);
-}
 
 int	redirection_error(t_token *current)
 {
@@ -26,7 +20,7 @@ int	redirection_error(t_token *current)
 		print_error(LINE_ERR);
 		return (0);
 	}
-    return (1);
+	return (1);
 }
 
 int	pipe_error(t_token *current)

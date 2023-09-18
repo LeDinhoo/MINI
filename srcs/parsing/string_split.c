@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 10:18:23 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:20:12 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,19 @@ t_token	*split_string(const char *str, t_mini *mini)
 
 	if (mini->start == NULL)
 		head = NULL;
-    else
-        head = mini->start;
-    tkn = malloc(sizeof(t_split));
-    if (tkn == NULL)
+	else
+		head = mini->start;
+	tkn = malloc(sizeof(t_split));
+	if (tkn == NULL)
 		return (NULL);
 	tkn->start = 0;
 	tkn->end = 0;
 	tkn->length = strlen(str);
 	tkn->in_quotes = 0;
 	tkn->in_simple_quotes = 0;
-    tkn->ret = mini->ret;
-    while (tkn->end <= tkn->length)
-    {
+	tkn->ret = mini->ret;
+	while (tkn->end <= tkn->length)
+	{
 		if (str[tkn->end] == '\'')
 		{
 			if (tkn->in_quotes == '\'')

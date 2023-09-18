@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 12:26:10 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:20:58 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	get_count(t_replace *rep)
 char	*allocate_memory(t_replace *rep)
 {
 	rep->resultat = malloc(strlen(rep->str) + (rep->len_substr2
-			- rep->len_substr1) * rep->count + 1);
+				- rep->len_substr1) * rep->count + 1);
 	if (!rep->resultat)
 	{
 		printf("Erreur d'allocation de mémoire.\n");
@@ -162,12 +162,12 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 		&& tkn->in_simple_quotes == 0)
 	{
 		swap.variablename = find_dollar_value(swap.substitutedtoken,
-			ft_strichr(swap.substitutedtoken, '$'));
+				ft_strichr(swap.substitutedtoken, '$'));
 		if (ft_strcmp(swap.variablename, "$?") == 0)
 		{
 			swap.variablevalue = ft_itoa(tkn->ret);
 			swap.substitutedtoken = replace_substring(swap.substitutedtoken,
-				swap.variablename, swap.variablevalue);
+					swap.variablename, swap.variablevalue);
 			swap.is_switch = 1;
 			free(swap.variablevalue);
 		}
@@ -175,7 +175,7 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 		{
 			swap.variablevalue = getenv(swap.variablename + 1);
 			swap.substitutedtoken = replace_substring(swap.substitutedtoken,
-				swap.variablename, swap.variablevalue);
+					swap.variablename, swap.variablevalue);
 			swap.is_switch = 1;
 		}
 		free(swap.variablename);
@@ -186,20 +186,4 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 	if (swap.is_switch == 0)
 		swap.substitutedtoken = strdup(token);
 	return (swap.substitutedtoken);
-}
-
-void	add_token_to_list(t_token **head, const char *start, int tokenLength,
-		t_split *tkn)
-{
-	char	*token;
-	char	*substituted_token;
-
-	token = malloc(tokenLength + 1);
-	strncpy(token, start, tokenLength);
-	token[tokenLength] = '\0';
-	substituted_token = substitute_variable_value(token, tkn);
-	add_node(head, substituted_token, determine_token_type(substituted_token));
-	tkn->in_simple_quotes = 0;
-	free(substituted_token);
-	free(token);
 }
