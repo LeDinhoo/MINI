@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:08:07 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 15:21:15 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-// TOKEN TYPE
 # define PATH_MAX 4096
 # define EMPTY 0
 # define CMD 1
@@ -48,7 +47,6 @@
 # define IS_DIRECTORY 126
 # define UNKNOWN_COMMAND 127
 
-// ERROR
 # define PIPE_ERR "Syntax error: \"|\" unexpected"
 # define LINE_ERR "Syntax error: newline unexpected"
 
@@ -132,7 +130,6 @@ typedef struct s_mini
 	int				input_fd;
 	int				pid_value;
 	int				ret;
-	///
 	char			*input;
 	char			**env;
 	char			**envp;
@@ -189,12 +186,10 @@ void				pipe_redirection(t_mini *mini, t_cmd *current,
 void				replace_str(t_replace *rep);
 void				set_last_cmd(t_mini *mini);
 void				update_in_quotes(t_parser *parser);
-
-
-
-
-
-
+void				redir_and_ret(t_cmd *current, int *ret, t_mini *mini);
+int					update_ret(t_cmd *current, int ret);
+void				handle_last_return_value(t_switch *swap, t_split *tkn);
+void				handle_classic_env_value(t_switch *swap);
 
 // command_processing.c
 void				update_token_types(t_mini *mini);

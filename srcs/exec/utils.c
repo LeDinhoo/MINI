@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 14:32:22 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:34:10 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 15:21:59 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,9 @@ void	ft_close(int fd)
 		close(fd);
 }
 
-
+int	ft_isalpha(char c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:34:51 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 15:08:57 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,27 +50,12 @@ int	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	if (current->cmd && current->is_last == 1)
 		dup2(STDOUT_FILENO, STDOUT_FILENO);
 	pipe_redirection(mini, current, pipe_fd, i);
-	if (current->redir.output_file || current->redir.input_file
-		|| current->redir.append_file || current->redir.heredoc_content)
-	{
-		if (apply_redirection(current) == 0)
-		{
-			if (current->cmd_path != NULL)
-				ret = error_message(current->cmd_path);
-			else
-				ret = error_message(current->cmd);
-			free_all(mini);
-			exit(ret);
-		}
-	}
+	redir_and_ret(current, &ret, mini);
 	if (current->cmd)
 	{
 		if (ft_strchr(current->cmd_path, '/') != NULL)
 			execve(current->cmd_path, current->cmd_args, mini->envp);
-		if (current->cmd_path != NULL)
-			ret = error_message(current->cmd_path);
-		else
-			ret = error_message(current->cmd);
+		ret = update_ret(current, ret);
 		free_all(mini);
 		exit(ret);
 	}
