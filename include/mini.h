@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 15:28:39 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:17:56 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@
 # define END 7
 # define HEREDOC 8
 
-# define BUFF_SIZE 4096
-# define EXPANSION -36
 # define ERROR 1
 # define SUCCESS 0
 # define IS_DIRECTORY 126
@@ -81,6 +79,7 @@ typedef struct s_split
 	int				in_quotes;
 	int				in_simple_quotes;
 	int				tokenlength;
+	int				ret;
 }					t_split;
 
 typedef struct s_token
@@ -132,6 +131,7 @@ typedef struct s_mini
 	int				nb_steps;
 	int				input_fd;
 	int				pid_value;
+	int				ret;
 	///
 	char			*input;
 	char			**env;
@@ -177,7 +177,7 @@ void				update_in_quotes(t_parser *parser);
 void				builtin_exec(t_mini *mini);
 t_token				*echo_build(t_token *head);
 char				*get_git_branch(void);
-char				*get_prompt_str(void);
+char				*get_prompt_str(t_mini *mini);
 int					minishell_cd(char *path);
 void				cd_build(t_mini *mini);
 

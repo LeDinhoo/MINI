@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 16:07:22 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:18:23 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ t_token	*split_string(const char *str, t_mini *mini)
 	tkn->length = strlen(str);
 	tkn->in_quotes = 0;
 	tkn->in_simple_quotes = 0;
-	while (tkn->end <= tkn->length)
-	{
+    tkn->ret = mini->ret;
+    while (tkn->end <= tkn->length)
+    {
 		if (str[tkn->end] == '\'')
 		{
 			if (tkn->in_quotes == '\'')

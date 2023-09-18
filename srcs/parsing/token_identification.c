@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/30 12:05:40 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:18:44 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ char	*find_dollar_value(char *token, int i)
 	var_len = 0;
 	j = i;
 	variablename = NULL;
-	// while (token[i] && token[i] != ' ')
 	while (token[i] && ((ft_isalpha(token[i]) == 1) || token[i] == '$'
 			|| token[i] == '?'))
 	{
@@ -66,14 +65,15 @@ char	*find_dollar_value(char *token, int i)
 			if (is_find == 0)
 				is_find = 1;
 			else
-			{
 				break ;
-			}
 		}
-		if (token[i] == '?' && token[i - 1] != '$')
+		if (token[i] == '?' && token[i - 1] == '$')
 		{
+			var_len++;
 			break ;
 		}
+		if (token[i] == '?' && token[i - 1] != '$')
+			break ;
 		var_len++;
 		i++;
 	}
@@ -103,7 +103,7 @@ int	get_count(t_replace *rep)
 char	*allocate_memory(t_replace *rep)
 {
 	rep->resultat = malloc(strlen(rep->str) + (rep->len_substr2
-				- rep->len_substr1) * rep->count + 1);
+			- rep->len_substr1) * rep->count + 1);
 	if (!rep->resultat)
 	{
 		printf("Erreur d'allocation de mémoire.\n");
@@ -162,23 +162,21 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 		&& tkn->in_simple_quotes == 0)
 	{
 		swap.variablename = find_dollar_value(swap.substitutedtoken,
-				ft_strichr(swap.substitutedtoken, '$'));
+			ft_strichr(swap.substitutedtoken, '$'));
 		// OU BIEN DOLLAR DOLLAR ALORS TU SWAP CODE D'ERREUR ||
 		//$$ doit retourner la valeur du processus principale du shell en cours d'utilisation
 		if (ft_strcmp(swap.variablename, "$?") == 0)
 		{
-			strstr("$?", )
-			// copier mini->ret dedans que je met a jour a chaque fois avec les messages d'erreur et tout;
-			swap.variablevalue = "127";
+			swap.variablevalue = ft_itoa(tkn->ret);
 			swap.substitutedtoken = replace_substring(swap.substitutedtoken,
-					swap.variablename, swap.variablevalue);
+				swap.variablename, swap.variablevalue);
 			swap.is_switch = 1;
 		}
 		else
 		{
 			swap.variablevalue = getenv(swap.variablename + 1);
 			swap.substitutedtoken = replace_substring(swap.substitutedtoken,
-					swap.variablename, swap.variablevalue);
+				swap.variablename, swap.variablevalue);
 			swap.is_switch = 1;
 		}
 		free(swap.variablename);

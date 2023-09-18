@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 15:48:26 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:13:42 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,18 +340,35 @@ int	cmd_numbers(t_cmd *cmd)
 	return (nb);
 }
 
-void	wait_for_children(int nb_steps)
-{
-	int	i;
-	int	j;
+// void	wait_for_children(int nb_steps)
+// {
+// 	int	i;
+// 	int	j;
 
-	j = nb_steps;
-	i = 0;
-	while (i < j)
+// 	j = nb_steps;
+// 	i = 0;
+// 	while (i < j)
+// 	{
+// 		i++;
+// 		wait(NULL);
+// 	}
+// }
+
+int	wait_for_children(void)
+{
+	int		last_child_exit_status;
+	int		status;
+	pid_t	child_pid;
+
+	last_child_exit_status = 0;
+	while ((child_pid = wait(&status)) != -1)
 	{
-		i++;
-		wait(NULL);
+		if (WIFEXITED(status))
+		{
+			last_child_exit_status = WEXITSTATUS(status);
+		}
 	}
+	return (last_child_exit_status);
 }
 
 int	is_only(t_mini *mini)
@@ -389,7 +406,7 @@ void	apply_output(t_cmd *current)
 
 	output_fd = 0;
 	output_fd = open(current->redir.output_file, O_WRONLY | O_CREAT | O_TRUNC,
-			0644);
+		0644);
 	if (output_fd == -1)
 	{
 		perror("Invalid file descriptor");
@@ -405,7 +422,7 @@ void	apply_append(t_cmd *current)
 
 	append_fd = 0;
 	append_fd = open(current->redir.append_file, O_CREAT | O_RDWR | O_APPEND,
-			0644);
+		0644);
 	if (append_fd == -1)
 	{
 		perror("Invalid file descriptor");
@@ -457,39 +474,29 @@ void	apply_redirection(t_cmd *current)
 		apply_heredoc();
 }
 
-// void	ft_close(int fd)
-// {
-// 	if (fd > 0)
-// 		close(fd);
-// }
+void	ft_close(int fd)
+{
+	if (fd > 0)
+		close(fd);
+}
 
-// int	error_message(char *path)
-// {
-// 	DIR	*folder;
-// 	int	fd;
-// 	int	ret;
+int	error_message(char *path)
+{
+	DIR	*folder;
+	int	fd;
+	int	ret;
 
-// 	fd = open(path, O_WRONLY);
-// 	folder = opendir(path);
-// 	ft_putstr_fd("minishell: ", 2);
-// 	ft_putstr_fd(path, 2);
-// 	if (ft_strchr(path, '/') == NULL)
-// 		ft_putendl_fd(": command not found", 2);
-// 	else if (fd == -1 && folder == NULL)
-// 		ft_putendl_fd(": No such file or directory", 2);
-// 	else if (fd == -1 && folder != NULL)
-// 		ft_putendl_fd(": is a directory", 2);
-// 	else if (fd != -1 && folder == NULL)
-// 		ft_putendl_fd(": Permission denied", 2);
-// 	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
-// 		ret = UNKNOWN_COMMAND;
-// 	else
-// 		ret = IS_DIRECTORY;
-// 	if (folder)
-// 		closedir(folder);
-// 	ft_close(fd);
-// 	return (ret);
-// }
+	fd = open(path, O_WRONLY);
+	folder = opendir(path);
+	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
+		ret = UNKNOWN_COMMAND;
+	else
+		ret = IS_DIRECTORY;
+	if (folder)
+		closedir(folder);
+	ft_close(fd);
+	return (ret);
+}
 
 void	pipe_redirection(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 {
@@ -509,10 +516,11 @@ void	pipe_redirection(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	}
 }
 
-void	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
+int	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 {
-	// int	ret;
-	// ret = SUCCESS;
+	int	ret;
+
+	ret = SUCCESS;
 	if (current->cmd && current->is_last == 1)
 		dup2(STDOUT_FILENO, STDOUT_FILENO);
 	pipe_redirection(mini, current, pipe_fd, i);
@@ -523,12 +531,15 @@ void	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	{
 		if (ft_strchr(current->cmd_path, '/') != NULL)
 			execve(current->cmd_path, current->cmd_args, mini->envp);
-		// ret = error_message(current->cmd_path);
+		if (current->cmd_path != NULL)
+			ret = error_message(current->cmd_path);
+        else
+			ret = error_message(current->cmd);
 		free(current->cmd);
-		exit(1);
+		exit(ret);
 	}
 	else
-		exit(1);
+		exit(ret);
 }
 
 void	iterate_commands(t_mini *mini)
@@ -568,6 +579,7 @@ int	execution(t_mini *mini)
 		return (0);
 	set_last_cmd(mini);
 	iterate_commands(mini);
-	wait_for_children(mini->nb_steps);
+	mini->ret = wait_for_children();
+	// wait_for_children(mini->nb_steps);
 	return (0);
 }
