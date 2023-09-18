@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/07/12 14:39:25 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 13:56:09 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,41 @@ void	add_node(t_token **head, char *str, int type)
 	{
 		current = *head;
 		while (current->next != NULL)
-		{
 			current = current->next;
-		}
 		current->next = node;
 		node->prev = current;
+	}
+}
+
+void	add_token_to_list(t_token **head, const char *start, int tokenLength,
+		t_split *tkn)
+{
+	char	*token;
+	char	*substituted_token;
+
+	token = malloc(tokenLength + 1);
+	strncpy(token, start, tokenLength);
+	token[tokenLength] = '\0';
+	substituted_token = substitute_variable_value(token, tkn);
+	add_node(head, substituted_token, determine_token_type(substituted_token));
+	tkn->in_simple_quotes = 0;
+	free(substituted_token);
+	free(token);
+}
+
+void	add_cmd_node(t_cmd *node, t_cmd **head)
+{
+	t_cmd	*current;
+
+	if (*head == NULL)
+	{
+		*head = node;
+	}
+	else
+	{
+		current = *head;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = node;
 	}
 }

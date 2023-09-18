@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:27:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 10:53:59 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/13 14:25:46 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 void	setup_here_doc(t_mini *mini, char *limiter)
 {
-    char    *s1;
-    char    *prompt;
+	char	*s1;
+	char	*prompt;
 
 	mini->is_here_doc = 1;
-    mini->here_doc_fd = 0;
-    mini->here_doc_fd = open("/tmp/.pipex_here_doc",
-                             O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (mini->here_doc_fd < 0)
+	mini->here_doc_fd = 0;
+	mini->here_doc_fd = open("/tmp/.pipex_here_doc",
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (mini->here_doc_fd < 0)
 		ft_printf("ERROR");
 	while (1)
 	{

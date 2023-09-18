@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc -g3
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) 
 
@@ -24,15 +24,25 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/node_management.c \
 		$(SRC_DIR)/srcs/parsing/path.c \
 		$(SRC_DIR)/srcs/parsing/print_helper.c \
-		$(SRC_DIR)/srcs/parsing/string_split.c \
+		$(SRC_DIR)/srcs/parsing/string_split/string_split.c \
+		$(SRC_DIR)/srcs/parsing/string_split/split_quotes.c \
+		$(SRC_DIR)/srcs/parsing/string_split/split_other.c \
 		$(SRC_DIR)/srcs/parsing/token_identification.c \
 		$(SRC_DIR)/srcs/parsing/error_handling.c \
 		$(SRC_DIR)/srcs/parsing/fd_handling.c \
 		$(SRC_DIR)/srcs/parsing/pars_token.c \
+		$(SRC_DIR)/srcs/parsing/utils.c \
+		$(SRC_DIR)/srcs/parsing/switch_var.c \
 		$(SRC_DIR)/srcs/builtins/echo.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
 		$(SRC_DIR)/srcs/exec/exec.c \
+		$(SRC_DIR)/srcs/exec/apply_redir.c \
+		$(SRC_DIR)/srcs/exec/handle_redir.c \
+		$(SRC_DIR)/srcs/exec/handle_path.c \
+		$(SRC_DIR)/srcs/exec/handle_cmd.c \
+		$(SRC_DIR)/srcs/exec/utils.c \
+		$(SRC_DIR)/srcs/exec/error_ret.c \
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -86,6 +96,7 @@ re: fclean all
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/srcs
 	@mkdir -p $(OBJ_DIR)/srcs/parsing/
+	@mkdir -p $(OBJ_DIR)/srcs/parsing/string_split
 	@mkdir -p $(OBJ_DIR)/srcs/builtins/
 	@mkdir -p $(OBJ_DIR)/srcs/exec/
 	@mkdir -p $(OBJ_DIR)/utils

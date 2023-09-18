@@ -6,18 +6,29 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/08/31 17:26:01 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 15:52:12 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-void	init_struct(t_mini *mini)
+void	init_struct(t_mini *mini, char **envp)
 {
-    mini->is_here_doc = 0;
-    mini->input = NULL;
-    mini->env = NULL;
+	mini->is_here_doc = 0;
+	mini->input = NULL;
+	mini->env = NULL;
 	mini->start = NULL;
-    mini->cmd_tab = NULL;
-    get_path(mini);
+	mini->cmd_tab = NULL;
+	mini->envp = NULL;
+	mini->envp = envp;
+	mini->ret = SUCCESS;
+	get_path(mini);
+}
+
+void	init_expect(t_expect *ex)
+{
+	ex->input = 0;
+	ex->output = 0;
+	ex->append = 0;
+	ex->heredoc = 0;
 }

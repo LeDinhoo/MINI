@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:40:34 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 11:01:30 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 14:22:53 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,9 @@ int	is_here_doc(t_token *current)
 	return (0);
 }
 
-int	is_redirection(t_token *current)
-{
-	if (current->type == INPUT || current->type == APPEND
-		|| current->type == TRUNC)
-	{
-		return (1);
-	}
-	return (0);
-}
-
 int	pars_token(t_mini *mini)
 {
-	t_token *current;
+	t_token	*current;
 
 	current = mini->start;
 	while (current != NULL)
