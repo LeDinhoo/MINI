@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:21:15 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 16:50:48 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,22 @@ void				redir_and_ret(t_cmd *current, int *ret, t_mini *mini);
 int					update_ret(t_cmd *current, int ret);
 void				handle_last_return_value(t_switch *swap, t_split *tkn);
 void				handle_classic_env_value(t_switch *swap);
+void				handle_single_quotes(t_token **head, t_split *tkn,
+						const char *str);
+void				handle_double_quotes(t_token **head, t_split *tkn,
+						const char *str);
+void				handle_single_quotes_content(t_split *tkn, const char *str);
+void				handle_double_quotes_content(t_split *tkn, const char *str);
+void				handle_less_than_operator(t_token **head, t_split *tkn,
+						const char *str);
+void				handle_greater_than_operator(t_token **head, t_split *tkn,
+						const char *str);
+void				handle_semicolon_or_pipe_operator(t_token **head,
+						t_split *tkn, const char *str);
+void				handle_space(t_token **head, t_split *tkn, const char *str);
+void				handle_end_of_string(t_token **head, t_split *tkn,
+						const char *str);
+void				free_without_cmd(t_mini *mini);
 
 // command_processing.c
 void				update_token_types(t_mini *mini);

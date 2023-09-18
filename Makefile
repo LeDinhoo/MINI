@@ -24,7 +24,9 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/node_management.c \
 		$(SRC_DIR)/srcs/parsing/path.c \
 		$(SRC_DIR)/srcs/parsing/print_helper.c \
-		$(SRC_DIR)/srcs/parsing/string_split.c \
+		$(SRC_DIR)/srcs/parsing/string_split/string_split.c \
+		$(SRC_DIR)/srcs/parsing/string_split/split_quotes.c \
+		$(SRC_DIR)/srcs/parsing/string_split/split_other.c \
 		$(SRC_DIR)/srcs/parsing/token_identification.c \
 		$(SRC_DIR)/srcs/parsing/error_handling.c \
 		$(SRC_DIR)/srcs/parsing/fd_handling.c \
@@ -94,6 +96,7 @@ re: fclean all
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/srcs
 	@mkdir -p $(OBJ_DIR)/srcs/parsing/
+	@mkdir -p $(OBJ_DIR)/srcs/parsing/string_split
 	@mkdir -p $(OBJ_DIR)/srcs/builtins/
 	@mkdir -p $(OBJ_DIR)/srcs/exec/
 	@mkdir -p $(OBJ_DIR)/utils

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:49:46 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:50:18 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 16:50:40 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,12 @@ char	*replace_substring(char *str, char *str1, char *str2)
 	allocate_memory(&rep);
 	replace_str(&rep);
 	return (rep.resultat);
+}
+
+void	free_without_cmd(t_mini *mini)
+{
+	free_list(mini->start);
+	free_cmd(mini);
+	free(mini->input);
+	mini->start = NULL;
 }
