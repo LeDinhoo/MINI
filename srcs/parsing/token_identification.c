@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 10:18:44 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:26:10 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*find_dollar_value(char *token, int i)
 	{
 		if (token[i] == '$')
 		{
-			if (token[i - 1] == '$')
+			if (i > 1 && token[i - 1] == '$')
 				var_len++;
 			if (is_find == 0)
 				is_find = 1;
@@ -163,14 +163,13 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 	{
 		swap.variablename = find_dollar_value(swap.substitutedtoken,
 			ft_strichr(swap.substitutedtoken, '$'));
-		// OU BIEN DOLLAR DOLLAR ALORS TU SWAP CODE D'ERREUR ||
-		//$$ doit retourner la valeur du processus principale du shell en cours d'utilisation
 		if (ft_strcmp(swap.variablename, "$?") == 0)
 		{
 			swap.variablevalue = ft_itoa(tkn->ret);
 			swap.substitutedtoken = replace_substring(swap.substitutedtoken,
 				swap.variablename, swap.variablevalue);
 			swap.is_switch = 1;
+			free(swap.variablevalue);
 		}
 		else
 		{
@@ -181,8 +180,6 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 		}
 		free(swap.variablename);
 		dollarpos = ft_strichr(swap.substitutedtoken, '$');
-		// ft_printf("dollarpos:%d\n", dollarpos);
-		// POSSIBILITE DE LE METTRE DANS LA CONDITION
 		if (swap.substitutedtoken[dollarpos + 1] == '\0')
 			break ;
 	}

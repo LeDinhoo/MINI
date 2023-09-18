@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 10:24:04 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:24:23 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@ void	init_struct(t_mini *mini, char **envp)
     mini->cmd_tab = NULL;
     mini->envp = NULL;
     mini->envp = envp;
+    mini->ret = UNKNOWN_COMMAND;
     get_path(mini);
 }

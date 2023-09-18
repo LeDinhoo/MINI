@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 10:13:42 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/18 12:14:20 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,6 +318,10 @@ void	free_cmd(t_mini *mini)
 		}
 		free(current->cmd_args);
 		i = 0;
+		free(current->redir.append_file);
+		free(current->redir.heredoc_content);
+		free(current->redir.input_file);
+		free(current->redir.output_file);
 		free(current);
 		// FREE LES REDIRECTIONS SI IL Y EN A
 		current = next;
@@ -339,20 +343,6 @@ int	cmd_numbers(t_cmd *cmd)
 	}
 	return (nb);
 }
-
-// void	wait_for_children(int nb_steps)
-// {
-// 	int	i;
-// 	int	j;
-
-// 	j = nb_steps;
-// 	i = 0;
-// 	while (i < j)
-// 	{
-// 		i++;
-// 		wait(NULL);
-// 	}
-// }
 
 int	wait_for_children(void)
 {
@@ -400,7 +390,7 @@ void	set_last_cmd(t_mini *mini)
 	last->is_last = 1;
 }
 
-void	apply_output(t_cmd *current)
+int	apply_output(t_cmd *current)
 {
 	int	output_fd;
 
@@ -410,13 +400,15 @@ void	apply_output(t_cmd *current)
 	if (output_fd == -1)
 	{
 		perror("Invalid file descriptor");
-		exit(EXIT_FAILURE);
+		// exit(EXIT_FAILURE);
+		return (0);
 	}
 	dup2(output_fd, STDOUT_FILENO);
 	close(output_fd);
+	return (1);
 }
 
-void	apply_append(t_cmd *current)
+int	apply_append(t_cmd *current)
 {
 	int	append_fd;
 
@@ -426,13 +418,15 @@ void	apply_append(t_cmd *current)
 	if (append_fd == -1)
 	{
 		perror("Invalid file descriptor");
-		exit(EXIT_FAILURE);
+		// exit(EXIT_FAILURE);
+		return (0);
 	}
 	dup2(append_fd, STDOUT_FILENO);
 	close(append_fd);
+	return (1);
 }
 
-void	apply_input(t_cmd *current)
+int	apply_input(t_cmd *current)
 {
 	int	input_fd;
 
@@ -441,13 +435,15 @@ void	apply_input(t_cmd *current)
 	if (input_fd == -1)
 	{
 		perror("Invalid file descriptor");
-		exit(EXIT_FAILURE);
+		// exit(EXIT_FAILURE);
+		return (0);
 	}
 	dup2(input_fd, STDIN_FILENO);
 	close(input_fd);
+	return (1);
 }
 
-void	apply_heredoc(void)
+int	apply_heredoc(void)
 {
 	int	heredoc_fd;
 
@@ -456,22 +452,28 @@ void	apply_heredoc(void)
 	if (heredoc_fd == -1)
 	{
 		perror("Invalid file descriptor");
-		exit(EXIT_FAILURE);
+		// exit(EXIT_FAILURE);
+		return (0);
 	}
 	dup2(heredoc_fd, STDIN_FILENO);
 	close(heredoc_fd);
+	return (1);
 }
 
-void	apply_redirection(t_cmd *current)
+int	apply_redirection(t_cmd *current)
 {
+	int	ret;
+
+	ret = 1;
 	if (current->redir.output_file)
-		apply_output(current);
+		ret = apply_output(current);
 	if (current->redir.append_file)
-		apply_append(current);
+		ret = apply_append(current);
 	if (current->redir.input_file)
-		apply_input(current);
+		ret = apply_input(current);
 	if (current->redir.heredoc_content)
-		apply_heredoc();
+		ret = apply_heredoc();
+	return (ret);
 }
 
 void	ft_close(int fd)
@@ -516,6 +518,14 @@ void	pipe_redirection(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	}
 }
 
+void	free_all(t_mini *mini)
+{
+	free_list(mini->start);
+	free_cmd(mini);
+	free(mini->input);
+	free_env(mini);
+}
+
 int	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 {
 	int	ret;
@@ -526,20 +536,33 @@ int	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	pipe_redirection(mini, current, pipe_fd, i);
 	if (current->redir.output_file || current->redir.input_file
 		|| current->redir.append_file || current->redir.heredoc_content)
-		apply_redirection(current);
+	{
+		if (apply_redirection(current) == 0)
+		{
+			if (current->cmd_path != NULL)
+				ret = error_message(current->cmd_path);
+			else
+				ret = error_message(current->cmd);
+			free_all(mini);
+			exit(ret);
+		}
+	}
 	if (current->cmd)
 	{
 		if (ft_strchr(current->cmd_path, '/') != NULL)
 			execve(current->cmd_path, current->cmd_args, mini->envp);
 		if (current->cmd_path != NULL)
 			ret = error_message(current->cmd_path);
-        else
+		else
 			ret = error_message(current->cmd);
-		free(current->cmd);
+		free_all(mini);
 		exit(ret);
 	}
 	else
+	{
+		free_all(mini);
 		exit(ret);
+	}
 }
 
 void	iterate_commands(t_mini *mini)
