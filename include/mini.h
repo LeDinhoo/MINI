@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:38:18 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/09/19 11:39:05 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/09/19 17:44:05 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,14 @@ void	cd_build(t_cmd *cmd);
 void	ft_go_home(t_cmd *cmd, char *path, char *old_pwd);
 void	ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
 void	ft_update_env(t_cmd * cmd, char *path);
+
+//srcs/builtins/utils-builtin.c
+void	**ft_dup_array(char **array, bool free_array, bool dup_strings);
+void	ft_free_array(void **array);
+size_t	*ft_lengh_array(void **array);
+
+
+
 
 
 // exec.c

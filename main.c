@@ -3,14 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 11:36:31 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/09/19 17:32:57 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+char **ft_init_shell_env(char **envp)
+{
+	char	**new_envp;
+	char	*pwd;
+	char	*old_pwd;
+	char	*shlvl;
+
+	if (envp[0])
+		new_envp = ft_dup_array(envp, false, true);
+	else
+	{
+		new_envp = ft_calloc(5, sizeof(char *));
+		pwd = ft_strjoin("PWD=", getcwd(NULL, 0));
+		new_envp[0] = pwd;
+		old_pwd = ft_strjoin("OLDPWD=", getcwd(NULL, 0));
+		new_envp[1] = old_pwd;
+		shlvl = ft_strdup("SHLVL=1");
+		new_envp[2] = shlvl;
+		new_envp[3] = ft_strdup("PATH=");
+	}
+	return (envp);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -20,6 +43,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_struct(&mini, envp);
+	mini.env = ft_init_shell_env(envp);
 	while (1)
 	{
 		prompt = get_prompt_str(&mini);
