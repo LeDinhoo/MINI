@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 14:30:51 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:31:35 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/19 10:00:27 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	handle_cmd(t_token *start, t_cmd *node)
 	if (!node || !start)
 		return ;
 	node->cmd = ft_strdup(start->str);
+	if (node->cmd[0] == '\0')
+		not_found(node->cmd);
 	handle_arg(node, start->str);
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 13:56:09 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/19 09:14:40 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ void	add_token_to_list(t_token **head, const char *start, int tokenLength,
 	strncpy(token, start, tokenLength);
 	token[tokenLength] = '\0';
 	substituted_token = substitute_variable_value(token, tkn);
-	add_node(head, substituted_token, determine_token_type(substituted_token));
-	tkn->in_simple_quotes = 0;
+    substituted_token = substitute_quote(substituted_token, tkn);
+    add_node(head, substituted_token, determine_token_type(substituted_token));
+    tkn->in_simple_quotes = 0;
 	free(substituted_token);
 	free(token);
 }

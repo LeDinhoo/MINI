@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 16:50:48 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/19 09:16:33 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,7 @@ void				handle_space(t_token **head, t_split *tkn, const char *str);
 void				handle_end_of_string(t_token **head, t_split *tkn,
 						const char *str);
 void				free_without_cmd(t_mini *mini);
+char				*substitute_quote(char *token, t_split *tkn);
 
 // command_processing.c
 void				update_token_types(t_mini *mini);

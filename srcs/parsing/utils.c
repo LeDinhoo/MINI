@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:49:46 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 16:50:40 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/19 11:02:29 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ void	free_without_cmd(t_mini *mini)
 {
 	free_list(mini->start);
 	free_cmd(mini);
-	free(mini->input);
+	// free(mini->input);
 	mini->start = NULL;
 }
