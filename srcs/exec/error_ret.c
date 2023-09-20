@@ -20,7 +20,6 @@ int	error_message(char *path)
 
 	fd = open(path, O_WRONLY);
 	folder = opendir(path);
-	//
 	ft_putstr_fd("mini: ", 2);
 	ft_putstr_fd(path, 2);
 	if (ft_strchr(path, '/') == NULL)
@@ -43,7 +42,7 @@ int	error_message(char *path)
 
 int	update_ret(t_cmd *current, int ret)
 {
-	if (current->cmd_path != NULL)
+	if (current->cmd_path != NULL && current->cmd)
 		ret = error_message(current->cmd_path);
 	else
 		ret = error_message(current->cmd);

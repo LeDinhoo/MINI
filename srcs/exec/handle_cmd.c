@@ -62,8 +62,6 @@ void	handle_cmd(t_token *start, t_cmd *node)
 	if (!node || !start)
 		return ;
 	node->cmd = ft_strdup(start->str);
-	if (node->cmd[0] == '\0')
-		not_found(node->cmd);
 	handle_arg(node, start->str);
 	return ;
 }

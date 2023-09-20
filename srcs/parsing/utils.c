@@ -84,6 +84,6 @@ void	free_without_cmd(t_mini *mini)
 {
 	free_list(mini->start);
 	free_cmd(mini);
-	// free(mini->input);
+	free(mini->input);
 	mini->start = NULL;
 }

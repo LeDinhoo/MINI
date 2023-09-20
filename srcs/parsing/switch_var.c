@@ -93,5 +93,7 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 	}
 	if (swap.is_switch == 0)
 		swap.substitutedtoken = strdup(token);
+	if (!swap.substitutedtoken)
+		return (NULL);
 	return (swap.substitutedtoken);
 }

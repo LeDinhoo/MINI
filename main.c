@@ -67,15 +67,16 @@ int	main(int argc, char **argv, char **envp)
 		if (mini.input != NULL)
 		{
 			add_history(mini.input);
+			missing_quote(&mini, mini.input);
 			mini.start = split_string(mini.input, &mini);
 			if (pars_token(&mini))
 			{
 				update_token_types(&mini);
 				// builtin_exec(&mini);
 				execution(&mini);
-				print_args(&mini);
+				// print_args(&mini);
 			}
-			print_list(mini.start);
+			// print_list(mini.start);
 			free_without_cmd(&mini);
 		}
 	}

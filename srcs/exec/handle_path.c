@@ -26,20 +26,12 @@ void	absolute_not_found(char *str)
 
 int	handle_absolute_path(t_cmd *node, char *str)
 {
-	if (!str)
-	{
-		ft_printf("zozio");
-	}
 	if (access(str, F_OK | X_OK) == 0)
 	{
 		node->cmd_path = ft_strdup(str);
 		return (1);
 	}
-	else
-	{
-		// absolute_not_found(str);
-		return (0);
-	}
+	return (0);
 }
 
 int	access_path(char **env, t_cmd *node, char *str)
@@ -49,7 +41,8 @@ int	access_path(char **env, t_cmd *node, char *str)
 	int		i;
 
 	i = 0;
-    
+	if (env == NULL || !str[0])
+		return (0);
 	while (env[i])
 	{
 		tmp = str;
@@ -65,7 +58,6 @@ int	access_path(char **env, t_cmd *node, char *str)
 		i++;
 		free(tmp);
 	}
-	// not_found(str);
 	return (0);
 }
 

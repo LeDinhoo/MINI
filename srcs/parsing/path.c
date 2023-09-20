@@ -17,5 +17,7 @@ void	get_path(t_mini *mini)
 	char	*str;
 
 	str = getenv("PATH");
+	if (!str)
+		return ;
 	mini->env = ft_split(str, ':');
 }

@@ -207,6 +207,7 @@ void				handle_end_of_string(t_token **head, t_split *tkn,
 						const char *str);
 void				free_without_cmd(t_mini *mini);
 char				*substitute_quote(char *token, t_split *tkn);
+int					missing_quote(t_mini *mini, const char *str);
 
 // command_processing.c
 void				update_token_types(t_mini *mini);

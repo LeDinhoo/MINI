@@ -12,6 +12,35 @@
 
 #include "mini.h"
 
+char	**init_myenvp(char **envp)
+{
+	char	**myenvp;
+	int		len;
+
+	len = 0;
+	myenvp = NULL;
+	if (!envp)
+		return (NULL);
+	while (envp[len])
+		len++;
+	myenvp = ft_calloc(len, sizeof(char *));
+	if (!myenvp)
+		return (NULL);
+	len = 0;
+	while (envp[len])
+	{
+		myenvp[len] = ft_strdup(envp[len]);
+		len++;
+	}
+	len = 0;
+	while (myenvp[len])
+	{
+		ft_printf("%s\n", myenvp[len]);
+		len++;
+	}
+	return (myenvp);
+}
+
 void	init_struct(t_mini *mini, char **envp)
 {
 	mini->is_here_doc = 0;
@@ -20,7 +49,7 @@ void	init_struct(t_mini *mini, char **envp)
 	mini->start = NULL;
 	mini->cmd_tab = NULL;
 	mini->envp = NULL;
-	mini->envp = envp;
+	mini->envp = init_myenvp(envp);
 	mini->ret = SUCCESS;
 	get_path(mini);
 }

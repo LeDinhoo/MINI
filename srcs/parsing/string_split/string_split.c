@@ -56,6 +56,54 @@ void	process_string(const char *str, t_token **head, t_split *tkn)
 	}
 }
 
+char	*quote_prompt(void)
+{
+	static char	here_prompt[PATH_MAX];
+
+	memset(here_prompt, 0, sizeof(here_prompt));
+	strcat(here_prompt, "dquote> ");
+	return (here_prompt);
+}
+
+int	missing_quote(t_mini *mini, const char *str)
+{
+	int		i;
+	int		is_open;
+	char	*prompt;
+	char	*new_str;
+
+	is_open = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (is_open != '\"' && str[i] == '\'')
+		{
+			if (is_open == '\'')
+				is_open = 0;
+			else
+				is_open = '\'';
+		}
+		if (is_open != '\'' && str[i] == '\"')
+		{
+			if (is_open == '\"')
+				is_open = 0;
+			else
+				is_open = '\"';
+		}
+		i++;
+	}
+	if (is_open != 0)
+	{
+		prompt = quote_prompt();
+		new_str = readline(prompt);
+		mini->input = strcat(mini->input, "\n");
+		mini->input = strcat(mini->input, new_str);
+		free(new_str);
+		missing_quote(mini, mini->input);
+	}
+	return (1);
+}
+
 t_token	*split_string(const char *str, t_mini *mini)
 {
 	t_token	*head;
