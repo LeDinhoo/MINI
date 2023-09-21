@@ -6,7 +6,7 @@
 /*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:38:18 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/09/19 17:44:05 by clement          ###   ########.fr       */
+/*   Updated: 2023/09/21 19:00:25 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,25 +220,35 @@ void				free_without_cmd(t_mini *mini);
 void				update_token_types(t_mini *mini);
 void				is_cmd(t_token *current, char **env, int i);
 //srcs/buitltins/cd.c
-void	cd_build(t_cmd *cmd);
-void	ft_go_home(t_cmd *cmd, char *path, char *old_pwd);
-void	ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
-void	ft_update_env(t_cmd * cmd, char *path);
-
-
-//srcs/buitltins/cd.c
-void	cd_build(t_cmd *cmd);
-void	ft_go_home(t_cmd *cmd, char *path, char *old_pwd);
-void	ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
-void	ft_update_env(t_cmd * cmd, char *path);
+void				cd_build(t_cmd *cmd, t_mini *mini);
+void				ft_go_home(char *path, char *old_pwd);
+void				ft_go_old_pwd(char *path, char *old_pwd);
+void				ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
+char				**ft_add_to_env(t_mini *mini, char *str);
+bool				ft_is_in_env(char *str, t_mini *mini);
+void				ft_update_env(t_cmd * cmd, char *path);
+void				ft_update_env(t_mini *mini, char *old_pwd);
 
 //srcs/builtins/utils-builtin.c
-void	**ft_dup_array(char **array, bool free_array, bool dup_strings);
-void	ft_free_array(void **array);
-size_t	*ft_lengh_array(void **array);
+void				**ft_dup_array(char **array, bool free_array, bool dup_strings);
+void				ft_free_array(void **array);
+size_t				*ft_lengh_array(void **array);
+
+//srcs/buitltins/env.c
+void	env(char **envp);
+
+//srcs/buitltins/echo.c
 
 
+//srcs/buitltins/exit.c
 
+
+//srcs/buitltins/export.c
+
+
+//srcs/buitltins/pwd.c
+
+//srcs/buitltins/unset.c
 
 
 // exec.c

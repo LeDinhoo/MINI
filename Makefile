@@ -35,6 +35,11 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/switch_var.c \
 		$(SRC_DIR)/srcs/builtins/echo.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
+		$(SRC_DIR)/srcs/builtins/env.c \
+		$(SRC_DIR)/srcs/builtins/exit.c \
+		$(SRC_DIR)/srcs/builtins/export.c \
+		$(SRC_DIR)/srcs/builtins/pwd.c \
+		$(SRC_DIR)/srcs/builtins/unset.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
 		$(SRC_DIR)/srcs/exec/exec.c \
 		$(SRC_DIR)/srcs/exec/apply_redir.c \
