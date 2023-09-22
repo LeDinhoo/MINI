@@ -6,13 +6,13 @@
 /*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/20 15:04:50 by clement          ###   ########.fr       */
+/*   Updated: 2023/09/21 20:05:32 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-char **ft_init_shell_env(char **envp)
+/*char **ft_init_shell_env(char **envp)
 {
 	char	**new_envp;
 	char	*pwd;
@@ -33,7 +33,7 @@ char **ft_init_shell_env(char **envp)
 		new_envp[3] = ft_strdup("PATH=");
 	}
 	return (envp);
-}
+}*/
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -43,7 +43,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_struct(&mini, envp);
-	mini.envp = ft_init_shell_env(envp);
+	//mini.envp = ft_init_shell_env(envp);
 	while (1)
 	{
 		prompt = get_prompt_str(&mini);

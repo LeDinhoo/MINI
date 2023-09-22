@@ -6,17 +6,17 @@
 /*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:34:45 by clement           #+#    #+#             */
-/*   Updated: 2023/09/19 17:47:34 by clement          ###   ########.fr       */
+/*   Updated: 2023/09/22 12:37:13 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-size_t	*ft_lengh_array(void **array)
+size_t	ft_lengh_array(void **array)
 {
 	size_t x;
 	
-	if(!array[x])
+	if(!array)
 		return (0);
 	x = 0;
 	while(array[x])
@@ -39,9 +39,9 @@ void	ft_free_array(void **array)
 	}
 }
 
-void	**ft_dup_array(char **array, bool free_array, bool dup_strings)
+void	**ft_dup_array(void **array, bool free_array, bool dup_strings)
 {
-	char	**new_array;
+	void	**new_array;
 	size_t	lengh_array;
 	size_t	i;
 	

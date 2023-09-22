@@ -6,7 +6,7 @@
 /*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:08:29 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/21 18:49:41 by clement          ###   ########.fr       */
+/*   Updated: 2023/09/22 12:28:22 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,10 @@ void	cd_build(t_cmd *cmd, t_mini *mini)
 	}
 	old_pwd = getcwd(NULL, 0);
 	if (cmd->cmd_args[0] && cmd->cmd_args[1] == NULL)
-		return (ft_go_home(path, old_pwd));
+		return (ft_go_home(path, mini, old_pwd));
 	else if (cmd->cmd_args[1][0] == '-' && cmd->cmd_args[1][1] == '\0')
 	{
-		ft_go_old_pwd(path, old_pwd);
+		ft_go_old_pwd(path, mini, old_pwd);
 		return ;	
 	}
 	if (cmd->cmd_args[0] && cmd->cmd_args[1])
@@ -120,38 +120,36 @@ void	cd_build(t_cmd *cmd, t_mini *mini)
 			minishell_cd("");
 	}*/
 
-void	ft_go_home(char *path, char *old_pwd)
+void	ft_go_home(char *path, t_mini *mini, char *old_pwd)
 {
 	path = getenv("HOME");
 	if (path == NULL)
-		printf("Home not set\n");
-	if (chdir (&path[5] == -1))
-		printf("cd: %s: No such file or directory\n", path);
-	return (ft_update_env(mini, old_pwd), void (0));
+		return (printf("Home not set\n"), (void) 0);
+	if (chdir(&path[5]) == -1)
+		return (printf("cd: %s: No such file or directory\n", path), (void) 0);
+	return (ft_update_env(mini, old_pwd), (void) 0);
 }
 
-void	ft_go_old_pwd(char *path, char *old_pwd)
+void	ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd)
 {	
-	path = getenv("OLDPWD", mini->envp);
+	path = getenv("OLDPWD");
 	if (path == NULL)
-		return (printf("cd : OLDPWD not set"));
-	if (chdir (&path[7] == - 1))
-		return (printf("cd : %s: No such file or directory\n", path), void(0));
+		return (printf("cd : OLDPWD not set"), (void) 0);
+	if (chdir(&path[7]) == - 1)
+		return (printf("cd : %s: No such file or directory\n", path), (void) 0);
 	return (ft_update_env(mini, old_pwd));
 }
 
 bool ft_is_in_env(char *str, t_mini *mini)
 {
 	int i;
-	int j;
 	char **cpy_envp;
 	int	len_str;
 	
 	i = 0;
-	j = 0;
-	cpy_envp = mini->envp;
+	cpy_envp = mini->myenvp;
 	len_str = ft_strlen(str);
-	if(!str || !mini || !mini->envp)
+	if(!str || !mini || !mini->myenvp)
 		return (false);
 	while (cpy_envp[i])
 	{
@@ -165,19 +163,22 @@ bool ft_is_in_env(char *str, t_mini *mini)
 
 char **ft_add_to_env(t_mini *mini, char *str)
 {
-	char	**old_env;
+	//char	**old_env;
 	char	**new_env;
-	size_t	lengh_new_env;
-	int		i;
-	int		j;
+	size_t	length_new_env;
+	//size_t	i;
+	//size_t	j;
 	
-	old_env = mini->myenvp;
-	lengh_new_env = ft_lengh_array((char **)old_env) + 1;
-	i = ft_lengh_array((char **)old_env);
-	new_env = ft_calloc(lengh_new_env, sizeof( char *));
-	if (new_env == NULL)
+	length_new_env = ft_lengh_array((void **)mini->myenvp);
+	//i = ft_lengh_array((void **)old_env);
+	new_env = ft_calloc(length_new_env + 2, sizeof( char *));
+	if (!new_env)
 		return (NULL);
-	j = 0;
+	ft_memmove(new_env, mini->myenvp, length_new_env * (sizeof(char *)));
+	new_env[length_new_env] = ft_strdup(str);
+	free(mini->myenvp);
+	return(new_env);
+	/*j = 0;
 	while (j < i)
 	{
 		new_env[j] = ft_strdup(old_env[j]);
@@ -185,7 +186,7 @@ char **ft_add_to_env(t_mini *mini, char *str)
 	}
 	new_env[i] = ft_strdup(str);
 	ft_free_array(old_env);
-	return(new_env);
+	return(new_env);*/
 }
 
 void	ft_update_env(t_mini *mini, char *old_pwd)

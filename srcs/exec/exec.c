@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:08:57 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/22 12:32:10 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	if (current->cmd)
 	{
 		if (ft_strchr(current->cmd_path, '/') != NULL)
-			execve(current->cmd_path, current->cmd_args, mini->envp);
+			execve(current->cmd_path, current->cmd_args, mini->myenvp);
 		ret = update_ret(current, ret);
 		free_all(mini);
 		exit(ret);

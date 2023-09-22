@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:05:18 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 11:40:50 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/09/21 20:08:09 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	builtin_exec(t_cmd *cmd)
+/*int	builtin_exec(t_cmd *cmd)
 {
 	if (cmd == NULL)
 		return (0);
@@ -33,4 +33,16 @@ int	builtin_exec(t_cmd *cmd)
 		exit_build(cmd);
 	if (ft_strcmp(cmd->cmd_args[0], "env") == 0)
 		env_build(cmd);
+}*/
+void	builtin_exec(t_mini *mini)
+{
+	t_token	*current;
+
+	if (mini->start == NULL)
+		return ;
+	current = mini->start;
+	if (ft_strcmp(current->str, "cd") == 0)
+		cd_build(mini->cmd_tab, mini);
+	if (ft_strcmp(current->str, "echo") == 0)
+		echo_build(mini->start);
 }

@@ -6,7 +6,7 @@
 /*   By: clement <clement@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:38:18 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/09/21 19:00:25 by clement          ###   ########.fr       */
+/*   Updated: 2023/09/22 12:36:12 by clement          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ typedef struct s_mini
 	int				ret;
 	char			*input;
 	char			**env;
-	char			**envp;
+	char			**myenvp;
 	struct s_token	*start;
 	struct s_cmd	*cmd_tab;
 }					t_mini;
@@ -173,12 +173,10 @@ void				builtin_exec(t_mini *mini);
 void				update_in_quotes(t_parser *parser);
 
 // builtins.c
-int					builtin_exec(t_cmd *cmd);
+//int					builtin_exec(t_cmd *cmd);
 t_token				*echo_build(t_token *head);
 char				*get_git_branch(void);
-char				*get_prompt_str(void);
-int					minishell_cd(char *path);
-void				cd_build(t_mini *mini);
+//int					minishell_cd(char *path);
 void				cmd_args(t_mini *mini);
 void				find_redirection(t_token *current, t_expect *ex);
 void				ft_close(int fd);
@@ -221,18 +219,16 @@ void				update_token_types(t_mini *mini);
 void				is_cmd(t_token *current, char **env, int i);
 //srcs/buitltins/cd.c
 void				cd_build(t_cmd *cmd, t_mini *mini);
-void				ft_go_home(char *path, char *old_pwd);
-void				ft_go_old_pwd(char *path, char *old_pwd);
-void				ft_go_back_path(t_cmd *cmd, char *path, char *old_pwd);
+void				ft_go_home(char *path, t_mini *mini, char *old_pwd);
+void				ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd);
 char				**ft_add_to_env(t_mini *mini, char *str);
 bool				ft_is_in_env(char *str, t_mini *mini);
-void				ft_update_env(t_cmd * cmd, char *path);
 void				ft_update_env(t_mini *mini, char *old_pwd);
 
 //srcs/builtins/utils-builtin.c
-void				**ft_dup_array(char **array, bool free_array, bool dup_strings);
+void				**ft_dup_array(void **array, bool free_array, bool dup_strings);
 void				ft_free_array(void **array);
-size_t				*ft_lengh_array(void **array);
+size_t				ft_lengh_array(void **array);
 
 //srcs/buitltins/env.c
 void	env(char **envp);
