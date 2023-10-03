@@ -1,40 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_strstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/11 13:18:50 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/02 11:56:26 by hdupuy           ###   ########.fr       */
+/*   Created: 2023/09/29 09:17:09 by hdupuy            #+#    #+#             */
+/*   Updated: 2023/09/29 09:24:04 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "libft.h"
 
-void	echo_build(t_cmd *current)
+char	*ft_strstr(const char *haystack, const char *needle)
 {
-	int	i;
-	int	n;
-	int	option;
+	const char	*h;
+	const char	*n;
 
-	i = 1;
-	n = 0;
-	option = 1;
-	while (current->cmd_args[i])
+	h = haystack;
+	n = needle;
+	if (*needle == '\0')
+		return ((char *)haystack);
+	while (*haystack != '\0')
 	{
-		while (option == 1 && ft_strcmp(current->cmd_args[i], "-n") == 0)
+		while (*h != '\0' && *n != '\0' && *h == *n)
 		{
-			n = 1;
-			i++;
+			h++;
+			n++;
 		}
-		printf("%s", current->cmd_args[i]);
-		option = 0;
-		if (current->cmd_args[i + 1])
-			printf(" ");
-		i++;
+		if (*n == '\0')
+			return ((char *)haystack);
+		haystack++;
 	}
-	if (n == 0)
-		printf("\n");
-	return ;
+	return (NULL);
 }

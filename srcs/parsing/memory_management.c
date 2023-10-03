@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:19:34 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/02 13:06:36 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	free_env(t_mini *mini)
 		i++;
 	}
 	free(mini->env);
+	mini->env = NULL;
 }
 
 void	free_redir(t_cmd *current)

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 09:16:33 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 13:59:02 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 # define PIPE 6
 # define END 7
 # define HEREDOC 8
+# define EXPORT 9
 
 # define ERROR 1
 # define SUCCESS 0
@@ -77,7 +78,9 @@ typedef struct s_split
 	int				in_quotes;
 	int				in_simple_quotes;
 	int				tokenlength;
+	int				equal;
 	int				ret;
+	char			**myenvp;
 }					t_split;
 
 typedef struct s_token
@@ -150,7 +153,7 @@ int					apply_input(t_cmd *current);
 int					apply_output(t_cmd *current);
 int					apply_redirection(t_cmd *current);
 int					cmd_numbers(t_cmd *cmd);
-int					determine_token_type(const char *str);
+int					determine_token_type(const char *str, t_split *tkn);
 int					error_message(char *path);
 int					execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2],
 						int i);
@@ -162,10 +165,10 @@ int					handle_path(char **env, t_cmd *node, char *str);
 int					handle_redirection(t_cmd *current_cmd, t_token *current,
 						t_expect *ex);
 int					is_only(t_mini *mini);
-int					minishell_cd(char *path);
+int					minishell_cd(char *path, t_mini *mini);
 int					wait_for_children(void);
 t_cmd				*create_new_cmd(void);
-t_token				*echo_build(t_token *head);
+void				echo_build(t_cmd *current);
 t_token				*split_string(const char *str, t_mini *mini);
 void				absolute_not_found(char *str);
 void				builtin_exec(t_mini *mini);
@@ -189,7 +192,7 @@ void				update_in_quotes(t_parser *parser);
 void				redir_and_ret(t_cmd *current, int *ret, t_mini *mini);
 int					update_ret(t_cmd *current, int ret);
 void				handle_last_return_value(t_switch *swap, t_split *tkn);
-void				handle_classic_env_value(t_switch *swap);
+void				handle_classic_env_value(t_switch *swap, t_split *tkn);
 void				handle_single_quotes(t_token **head, t_split *tkn,
 						const char *str);
 void				handle_double_quotes(t_token **head, t_split *tkn,
@@ -208,6 +211,12 @@ void				handle_end_of_string(t_token **head, t_split *tkn,
 void				free_without_cmd(t_mini *mini);
 char				*substitute_quote(char *token, t_split *tkn);
 int					missing_quote(t_mini *mini, const char *str);
+bool				is_not_fork(t_cmd *current);
+void				exec_bin(t_cmd *current, t_mini *mini);
+void				unset_build(t_cmd *current, t_mini *mini);
+bool				is_builtin(t_cmd *current);
+void				print_env(char **myenvp);
+char				*get_env(const char *name, char **myenvp);
 
 // command_processing.c
 void				update_token_types(t_mini *mini);

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:19:51 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 09:16:49 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/02 12:54:04 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,23 @@ void	handle_last_return_value(t_switch *swap, t_split *tkn)
 	free(swap->variablevalue);
 }
 
-void	handle_classic_env_value(t_switch *swap)
+char	*get_env(const char *name, char **myenvp)
 {
-	swap->variablevalue = getenv(swap->variablename + 1);
+	char	*env_entry;
+
+	for (int i = 0; myenvp[i] != NULL; i++)
+	{
+		env_entry = myenvp[i];
+		if (strncmp(env_entry, name, strlen(name)) == 0
+			&& env_entry[strlen(name)] == '=')
+			return (env_entry + strlen(name) + 1);
+	}
+	return (NULL);
+}
+
+void	handle_classic_env_value(t_switch *swap, t_split *tkn)
+{
+	swap->variablevalue = get_env(swap->variablename + 1, tkn->myenvp);
 	swap->substitutedtoken = replace_substring(swap->substitutedtoken,
 		swap->variablename, swap->variablevalue);
 	swap->is_switch = 1;
@@ -85,7 +99,7 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 		if (ft_strcmp(swap.variablename, "$?") == 0)
 			handle_last_return_value(&swap, tkn);
 		else
-			handle_classic_env_value(&swap);
+			handle_classic_env_value(&swap, tkn);
 		free(swap.variablename);
 		dollarpos = ft_strichr(swap.substitutedtoken, '$');
 		if (swap.substitutedtoken[dollarpos + 1] == '\0')

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:08:57 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/02 11:58:19 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,16 @@ int	execute_cmd(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	redir_and_ret(current, &ret, mini);
 	if (current->cmd)
 	{
-		if (ft_strchr(current->cmd_path, '/') != NULL)
+		if (ft_strchr(current->cmd_path, '/') != NULL && !is_builtin(current))
 			execve(current->cmd_path, current->cmd_args, mini->envp);
-		ret = update_ret(current, ret);
+		else
+		{
+			// ret =
+			exec_bin(current, mini);
+			// exit(ret);
+		}
+		if (!is_builtin(current))
+			ret = update_ret(current, ret);
 		free_all(mini);
 		exit(ret);
 	}
@@ -78,6 +85,11 @@ void	iterate_commands(t_mini *mini)
 	mini->input_fd = 0;
 	while (current)
 	{
+		if (is_builtin(current) && !current->next)
+		{
+			exec_bin(current, mini);
+			break ;
+		}
 		if (current->is_last == 0)
 			pipe(pipe_fd);
 		pid = fork();

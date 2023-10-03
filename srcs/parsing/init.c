@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:52:12 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/02 10:40:03 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,6 @@ char	**init_myenvp(char **envp)
 	while (envp[len])
 	{
 		myenvp[len] = ft_strdup(envp[len]);
-		len++;
-	}
-	len = 0;
-	while (myenvp[len])
-	{
-		ft_printf("%s\n", myenvp[len]);
 		len++;
 	}
 	return (myenvp);

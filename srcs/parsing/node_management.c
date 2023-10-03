@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 09:14:40 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 14:16:46 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ void	add_node(t_token **head, char *str, int type)
 	node->next = NULL;
 	node->prev = NULL;
 	if (*head == NULL)
-	{
 		*head = node;
-	}
 	else
 	{
 		current = *head;
@@ -55,7 +53,8 @@ void	add_token_to_list(t_token **head, const char *start, int tokenLength,
 		return ;
 	}
 	substituted_token = substitute_quote(substituted_token, tkn);
-	add_node(head, substituted_token, determine_token_type(substituted_token));
+	add_node(head, substituted_token, determine_token_type(substituted_token,
+			tkn));
 	tkn->in_simple_quotes = 0;
 	free(substituted_token);
 	free(token);

@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/14 10:00:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/07/11 13:14:23 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/29 09:23:38 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char				*ft_strjoin(char *s1, char *s2);
 char				*ft_strmapi(char *s, char (*f)(unsigned int, char));
 
 /**
-* @brief Localise la première occurrence de la 
+* @brief Localise la première occurrence de la
 sous-chaîne 'needle' dans la chaîne 'haystack'
  *
  * @param haystack La chaîne principale
@@ -102,7 +102,7 @@ char				*ft_strrchr(const char *s, int c);
 /**
 
 	* @brief Enlève les caractères définis dans 'set'
-	 du début et de la fin de la chaîne 's1'
+		du début et de la fin de la chaîne 's1'
  *
  * @param s1 La chaîne à trimmer
  * @param set L'ensemble de caractères à enlever
@@ -170,7 +170,7 @@ long long			ft_atol(const char *str);
 
 /**
 
-	* @brief Concatène deux chaînes en ajoutant jusqu'à 
+	* @brief Concatène deux chaînes en ajoutant jusqu'à
 	'dstsize' caractères de 'src' à la fin de 'dst'
  *
  * @param dst La chaîne destination
@@ -295,7 +295,7 @@ void				ft_putchar_fd(char c, int fd);
 
 /**
 
-	* @brief Ecrit la chaîne 's' suivie d'un retour à la 
+	* @brief Ecrit la chaîne 's' suivie d'un retour à la
 	ligne sur le descripteur de fichier 'fd'
  *
  * @param s La chaîne à écrire
@@ -312,7 +312,7 @@ void				ft_putstr_fd(char *s, int fd);
 
 /**
 
-	* @brief Applique la fonction 'f' 
+	* @brief Applique la fonction 'f'
 	à chaque caractère de la chaîne 's' passée en argument,
 	et passe son index en premier argument
  *
@@ -348,5 +348,7 @@ char				*ft_strcpy(char *destination, const char *source);
 	égal ou supérieur à 's2'
  */
 int					ft_strcmp(const char *s1, const char *s2);
+
+char				*ft_strstr(const char *haystack, const char *needle);
 
 #endif

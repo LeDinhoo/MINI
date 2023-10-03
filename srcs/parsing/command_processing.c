@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 13:57:51 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 14:11:11 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void	update_token_types(t_mini *mini)
 		if (current->next && redirection == 1)
 		{
 			current = current->next;
-			current->type = CMD;
+			if (current->type != EXPORT)
+				current->type = CMD;
 			redirection = 0;
 		}
 		if (!current->prev || current->prev->type == PIPE)
@@ -52,7 +53,7 @@ void	update_token_types(t_mini *mini)
 			if (current->type == HEREDOC || current->type == INPUT
 				|| current->type == APPEND || current->type == TRUNC)
 				redirection = 1;
-			else
+			else if (current->type != EXPORT)
 				current->type = CMD;
 		}
 		current = current->next;
