@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 12:37:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/02 11:58:19 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/05 16:51:59 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,10 @@ void	iterate_commands(t_mini *mini)
 	mini->input_fd = 0;
 	while (current)
 	{
+		sigaction(SIGQUIT, mini->sig->quit_parent, NULL);
 		if (is_builtin(current) && !current->next)
 		{
+			//mini->ret = exec_bin.......
 			exec_bin(current, mini);
 			break ;
 		}
@@ -94,7 +96,11 @@ void	iterate_commands(t_mini *mini)
 			pipe(pipe_fd);
 		pid = fork();
 		if (pid == 0)
+		{
+			sigaction(SIGINT, mini->sig->int_exec, NULL);
 			execute_cmd(mini, current, pipe_fd, i);
+		}
+		sigaction(SIGINT, mini->sig->int_parent, NULL);
 		if (i != 0)
 			close(mini->input_fd);
 		if (current->is_last == 0)

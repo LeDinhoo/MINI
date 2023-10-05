@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/02 10:40:03 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 14:25:12 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	init_struct(t_mini *mini, char **envp)
 {
 	mini->is_here_doc = 0;
 	mini->input = NULL;
-	mini->env = NULL;
+	mini->path = NULL;
 	mini->start = NULL;
 	mini->cmd_tab = NULL;
 	mini->envp = NULL;

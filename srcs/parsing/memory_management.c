@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/02 13:06:36 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 14:25:06 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ void	free_env(t_mini *mini)
 	int	i;
 
 	i = 0;
-	while (mini->env[i])
+	while (mini->path[i])
 	{
-		free(mini->env[i]);
+		free(mini->path[i]);
 		i++;
 	}
-	free(mini->env);
-	mini->env = NULL;
+	free(mini->path);
+	mini->path = NULL;
 }
 
 void	free_redir(t_cmd *current)

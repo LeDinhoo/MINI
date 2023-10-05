@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/03 12:47:27 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/05 16:25:17 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,17 @@ void	update_env(t_mini *mini)
 	get_path(mini);
 }
 
+void	ft_prompt(t_mini *mini)
+{
+	char	*prompt;
+
+	ft_init_signals(mini->sig);
+	sigaction(SIGINT, mini->sig->int_prompt, NULL);
+	sigaction(SIGQUIT, mini->sig->int_prompt, NULL);
+	prompt = get_prompt_str(mini);
+	mini->input = readline(prompt);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
@@ -37,14 +48,33 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	mini.sig = malloc(sizeof(t_sig));
+	if (!mini.sig)
+		return (0);
 	init_struct(&mini, envp);
 	while (1)
 	{
 		update_env(&mini);
-		prompt = get_prompt_str(&mini);
-		mini.input = readline(prompt);
-		if (mini.input != NULL)
+		// prompt = get_prompt_str(&mini);
+		// mini.input = readline(prompt);
+		////////////////////////////////////
+		ft_prompt(&mini);
+		if (mini.input == NULL)
 		{
+			write(1, "exit\n", 5);
+			free_env(&mini);
+			return (0);
+		}
+		//////////////////////////////////////
+		else if (mini.input != NULL)
+		{
+			//////////////////////////////////
+			if (strcmp(mini.input, "exit") == 0)
+			{
+				printf("exit\n");
+				break ;
+			}
+			////////////////////////////////////
 			add_history(mini.input);
 			missing_quote(&mini, mini.input);
 			mini.start = split_string(mini.input, &mini);
@@ -54,7 +84,7 @@ int	main(int argc, char **argv, char **envp)
 				execution(&mini);
 				// print_args(&mini);
 			}
-			print_list(mini.start);
+			// print_list(mini.start);
 			free_without_cmd(&mini);
 		}
 	}

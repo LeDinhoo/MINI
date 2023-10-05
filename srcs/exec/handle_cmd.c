@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 14:30:51 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 10:00:27 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 14:24:50 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	setup_command(t_mini *mini, t_token *current, t_cmd *current_cmd,
 	{
 		if (handle_redirection(current_cmd, current, ex) == 0)
 		{
-			handle_path(mini->env, current_cmd, current->str);
+			handle_path(mini->path, current_cmd, current->str);
 			handle_cmd(current, current_cmd);
 		}
 	}
