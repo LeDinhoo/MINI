@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 14:29:53 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:30:28 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/19 10:18:47 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	not_found(char *str)
 {
-	ft_printf("mini: command not found:");
-	ft_printf(" %s\n", str);
+	ft_printf("mini: ");
+	ft_printf("%s: command not found\n", str);
 }
 
 void	absolute_not_found(char *str)
@@ -31,11 +31,7 @@ int	handle_absolute_path(t_cmd *node, char *str)
 		node->cmd_path = ft_strdup(str);
 		return (1);
 	}
-	else
-	{
-		absolute_not_found(str);
-		return (0);
-	}
+	return (0);
 }
 
 int	access_path(char **env, t_cmd *node, char *str)
@@ -45,6 +41,8 @@ int	access_path(char **env, t_cmd *node, char *str)
 	int		i;
 
 	i = 0;
+	if (env == NULL || !str[0])
+		return (0);
 	while (env[i])
 	{
 		tmp = str;
@@ -60,7 +58,6 @@ int	access_path(char **env, t_cmd *node, char *str)
 		i++;
 		free(tmp);
 	}
-	not_found(str);
 	return (0);
 }
 

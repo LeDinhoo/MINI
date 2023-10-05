@@ -6,21 +6,49 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:05:18 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/12 15:18:08 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/05 16:51:40 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-void	builtin_exec(t_mini *mini)
+bool	is_builtin(t_cmd *current)
 {
-	t_token	*current;
+	if (!current->cmd_args)
+		return (false);
+	if (ft_strcmp(current->cmd_args[0], "cd") == 0
+		|| ft_strcmp(current->cmd_args[0], "echo") == 0
+		|| ft_strcmp(current->cmd_args[0], "pwd") == 0
+		|| ft_strcmp(current->cmd_args[0], "export") == 0
+		|| ft_strcmp(current->cmd_args[0], "unset") == 0
+		|| ft_strcmp(current->cmd_args[0], "exit") == 0
+		|| ft_strcmp(current->cmd_args[0], "env") == 0)
+		return (true);
+	else
+		return (false);
+}
 
-	if (mini->start == NULL)
+void	env_build(t_mini *mini)
+{
+	print_env(mini->envp);
+}
+
+void	exec_bin(t_cmd *current, t_mini *mini)
+{
+	int	ret;
+
+	ret = 0;
+	// toute les builtin doivent avoir cette norm : ret = unset_build(current, mini);
+	if (!current->cmd_args)
 		return ;
-	current = mini->start;
-	if (ft_strcmp(current->str, "cd") == 0)
-		cd_build(mini);
-	if (ft_strcmp(current->str, "echo") == 0)
-		echo_build(mini->start);
+	if (ft_strcmp(current->cmd_args[0], "unset") == 0)
+		unset_build(current, mini);
+	else if (ft_strcmp(current->cmd_args[0], "cd") == 0)
+		return (cd_build(current, mini));
+	else if (ft_strcmp(current->cmd_args[0], "env") == 0)
+		env_build(mini);
+	else if (ft_strcmp(current->cmd_args[0], "echo") == 0)
+		echo_build(current);
+	return ;
+	// return (ret);
 }

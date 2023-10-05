@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 14:34:00 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:09:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/09/29 10:20:47 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ int	error_message(char *path)
 
 	fd = open(path, O_WRONLY);
 	folder = opendir(path);
+	ft_putstr_fd("mini: ", 2);
+	ft_putstr_fd(path, 2);
+	if (ft_strchr(path, '/') == NULL)
+		ft_putendl_fd(": command not found", 2);
+	else if (fd == -1 && folder == NULL)
+		ft_putendl_fd(": No such file or directory", 2);
+	else if (fd == -1 && folder != NULL)
+		ft_putendl_fd(": is a directory", 2);
+	else if (fd != -1 && folder == NULL)
+		ft_putendl_fd(": Permission denied", 2);
 	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
 		ret = UNKNOWN_COMMAND;
 	else
@@ -32,7 +42,7 @@ int	error_message(char *path)
 
 int	update_ret(t_cmd *current, int ret)
 {
-	if (current->cmd_path != NULL)
+	if (current->cmd_path != NULL && current->cmd)
 		ret = error_message(current->cmd_path);
 	else
 		ret = error_message(current->cmd);

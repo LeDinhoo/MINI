@@ -6,13 +6,13 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 15:50:12 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/03 13:58:48 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	determine_token_type(const char *str)
+int	determine_token_type(const char *str, t_split *tkn)
 {
 	if (strcmp(str, "") == 0)
 		return (EMPTY);
@@ -28,6 +28,8 @@ int	determine_token_type(const char *str)
 		return (APPEND);
 	else if (strcmp(str, "<<") == 0)
 		return (HEREDOC);
+	else if (tkn->equal == 1)
+		return (EXPORT);
 	else
 	{
 		if (*str == '\0' || *str == '|' || *str == ';')

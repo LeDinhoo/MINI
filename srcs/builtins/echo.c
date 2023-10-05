@@ -6,34 +6,35 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 13:18:50 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/07/13 10:20:41 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/02 11:56:26 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-t_token	*echo_build(t_token *head)
+void	echo_build(t_cmd *current)
 {
-	t_token	*current;
-	int		newline;
+	int	i;
+	int	n;
+	int	option;
 
-	current = head;
-	newline = 1;
-	if (current && ft_strcmp(current->str, "echo") == 0)
-		current = current->next;
-	if (current && ft_strcmp(current->str, "-n") == 0)
+	i = 1;
+	n = 0;
+	option = 1;
+	while (current->cmd_args[i])
 	{
-		newline = 0;
-		current = current->next;
-	}
-	while (current && current->type != 7)
-	{
-		printf("%s", current->str);
-		if (current->next && current->next->type != 7)
+		while (option == 1 && ft_strcmp(current->cmd_args[i], "-n") == 0)
+		{
+			n = 1;
+			i++;
+		}
+		printf("%s", current->cmd_args[i]);
+		option = 0;
+		if (current->cmd_args[i + 1])
 			printf(" ");
-		current = current->next;
+		i++;
 	}
-	if (newline)
+	if (n == 0)
 		printf("\n");
-	return (current);
+	return ;
 }

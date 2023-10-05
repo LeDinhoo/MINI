@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc -g3
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = 
 INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) 
 
@@ -35,6 +35,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/switch_var.c \
 		$(SRC_DIR)/srcs/builtins/echo.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
+		$(SRC_DIR)/srcs/builtins/unset.c \
+		$(SRC_DIR)/srcs/builtins/utils.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
 		$(SRC_DIR)/srcs/exec/exec.c \
 		$(SRC_DIR)/srcs/exec/apply_redir.c \
@@ -43,6 +45,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/exec/handle_cmd.c \
 		$(SRC_DIR)/srcs/exec/utils.c \
 		$(SRC_DIR)/srcs/exec/error_ret.c \
+		$(SRC_DIR)/srcs/signals/handle_signals.c \
+		$(SRC_DIR)/srcs/signals/init_signals.c \
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -99,6 +103,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/srcs/parsing/string_split
 	@mkdir -p $(OBJ_DIR)/srcs/builtins/
 	@mkdir -p $(OBJ_DIR)/srcs/exec/
+	@mkdir -p $(OBJ_DIR)/srcs/signals/
 	@mkdir -p $(OBJ_DIR)/utils
 	@mkdir -p $(LIBFT_DIR).objs
 	@mkdir -p $(PRINTF_DIR).objs
