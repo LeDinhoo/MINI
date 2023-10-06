@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 16:38:00 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/03 13:14:55 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 11:15:58 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,34 +91,29 @@ int	single_quote_count(const char *str, int i)
 	return (nb_quote);
 }
 
-void	handle_single_quotes_content(t_split *tkn, const char *str)
+void	handle_single_quotes_content(t_token **head, t_split *tkn, const char *str)
 {
-	int	needed_quote;
-	int	quote;
-
-	quote = 0;
-	needed_quote = single_quote_count(str, tkn->end);
-	while (tkn->end <= tkn->length && (ft_strichr("<>;| ", str[tkn->end + 1])
-			== -1) || str[tkn->end + 1] == '\0')
+	while (tkn->end <= tkn->length && (ft_strichr("<>;| ", str[tkn->end + 1]) ==
+			-1) && str[tkn->end + 1] != '\0')
 	{
 		tkn->end++;
 	}
-	if (tkn->end <= tkn->length)
-		tkn->end--;
+	add_token_to_list(head, &str[tkn->start], tkn->end - tkn->start + 1, tkn);
+	tkn->end++;
+	tkn->start = tkn->end + 1;
+	tkn->in_quotes = 0;
 }
 
-void	handle_double_quotes_content(t_split *tkn, const char *str)
+void	handle_double_quotes_content(t_token **head, t_split *tkn,
+		const char *str)
 {
-	int	needed_quote;
-	int	quote;
-
-	quote = 0;
-	needed_quote = quote_count(str, tkn->end);
-	while (tkn->end <= tkn->length && (ft_strichr("<>;| ", str[tkn->end + 1])
-			== -1) || str[tkn->end + 1] == '\0')
+	while (tkn->end <= tkn->length && (ft_strichr("<>;| ", str[tkn->end + 1]) ==
+			-1) && str[tkn->end + 1] != '\0')
 	{
 		tkn->end++;
 	}
-	if (tkn->end <= tkn->length)
-		tkn->end--;
+	add_token_to_list(head, &str[tkn->start], tkn->end - tkn->start + 1, tkn);
+	tkn->end++;
+	tkn->start = tkn->end + 1;
+	tkn->in_quotes = 0;
 }
