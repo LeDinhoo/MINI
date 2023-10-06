@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/03 13:57:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 11:16:16 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ void	process_string(const char *str, t_token **head, t_split *tkn)
 		else if (str[tkn->end] == '\"')
 			handle_double_quotes(head, tkn, str);
 		else if (tkn->in_quotes == '\'' && str[tkn->end] != '\0')
-			handle_single_quotes_content(tkn, str);
+			handle_single_quotes_content(head, tkn, str);
 		else if (tkn->in_quotes == '\"' && str[tkn->end] != '\0')
-			handle_double_quotes_content(tkn, str);
+			handle_double_quotes_content(head, tkn, str);
 		else if (str[tkn->end] == '<')
 			handle_less_than_operator(head, tkn, str);
 		else if (str[tkn->end] == '>')

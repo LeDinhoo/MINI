@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 16:25:17 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 04:32:45 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,9 @@ int	main(int argc, char **argv, char **envp)
 			{
 				update_token_types(&mini);
 				execution(&mini);
-				// print_args(&mini);
+				print_args(&mini);
 			}
-			// print_list(mini.start);
+			print_list(mini.start);
 			free_without_cmd(&mini);
 		}
 	}

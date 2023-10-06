@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 14:13:17 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 11:16:11 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,9 @@ typedef struct s_mini
 	struct s_token		*start;
 	struct s_cmd		*cmd_tab;
 	t_sig				*sig;
+	int					savein;
+	int					saveout;
+	int					saveerr;
 }						t_mini;
 
 char					*allocate_memory(t_replace *rep);
@@ -213,9 +216,9 @@ void					handle_single_quotes(t_token **head, t_split *tkn,
 							const char *str);
 void					handle_double_quotes(t_token **head, t_split *tkn,
 							const char *str);
-void					handle_single_quotes_content(t_split *tkn,
+void					handle_single_quotes_content(t_token **head, t_split *tkn,
 							const char *str);
-void					handle_double_quotes_content(t_split *tkn,
+void					handle_double_quotes_content(t_token **head, t_split *tkn,
 							const char *str);
 void					handle_less_than_operator(t_token **head, t_split *tkn,
 							const char *str);
