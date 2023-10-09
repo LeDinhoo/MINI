@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:05:18 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 16:51:40 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 15:47:00 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void	exec_bin(t_cmd *current, t_mini *mini)
 	int	ret;
 
 	ret = 0;
-	// toute les builtin doivent avoir cette norm : ret = unset_build(current, mini);
+	// toute les builtin doivent avoir cette norm : ret = unset_build(current,
+		// mini);
 	if (!current->cmd_args)
 		return ;
 	if (ft_strcmp(current->cmd_args[0], "unset") == 0)
@@ -49,6 +50,8 @@ void	exec_bin(t_cmd *current, t_mini *mini)
 		env_build(mini);
 	else if (ft_strcmp(current->cmd_args[0], "echo") == 0)
 		echo_build(current);
+	// else if (ft_strcmp(current->cmd_args[0], "export") == 0)
+	// 	export_build(current, mini);
 	return ;
 	// return (ret);
 }
