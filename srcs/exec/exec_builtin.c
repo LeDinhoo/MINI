@@ -39,7 +39,7 @@ void	exec_bin(t_cmd *current, t_mini *mini)
 
 	ret = 0;
 	// toute les builtin doivent avoir cette norm : ret = unset_build(current,
-		// mini);
+	// mini);
 	if (!current->cmd_args)
 		return ;
 	if (ft_strcmp(current->cmd_args[0], "unset") == 0)
@@ -50,6 +50,10 @@ void	exec_bin(t_cmd *current, t_mini *mini)
 		env_build(mini);
 	else if (ft_strcmp(current->cmd_args[0], "echo") == 0)
 		echo_build(current);
+	else if (ft_strcmp(current->cmd_args[0], "pwd") == 0)
+		pwd_build();
+	else if (ft_strcmp(current->cmd_args[0], "exit") == 0)
+		exit_build(current, mini);
 	else if (ft_strcmp(current->cmd_args[0], "export") == 0)
 		export_build(current, mini);
 	return ;

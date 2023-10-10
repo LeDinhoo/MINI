@@ -38,6 +38,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/builtins/unset.c \
 		$(SRC_DIR)/srcs/builtins/utils.c \
 		$(SRC_DIR)/srcs/builtins/export.c \
+		$(SRC_DIR)/srcs/builtins/exit.c \
+		$(SRC_DIR)/srcs/builtins/pwd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
 		$(SRC_DIR)/srcs/exec/exec.c \
 		$(SRC_DIR)/srcs/exec/apply_redir.c \
@@ -48,6 +50,7 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/exec/error_ret.c \
 		$(SRC_DIR)/srcs/signals/handle_signals.c \
 		$(SRC_DIR)/srcs/signals/init_signals.c \
+		$(SRC_DIR)/srcs/signals/free_signals.c \
 
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

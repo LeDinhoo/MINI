@@ -32,8 +32,19 @@ char	**init_myenvp(char **envp)
 		myenvp[len] = ft_strdup(envp[len]);
 		len++;
 	}
-	// myenvp[len] = NULL;
 	return (myenvp);
+}
+
+void	setup_findable_var(t_mini *mini)
+{
+	char	*new_var;
+
+	if (!get_env("PWD", mini->envp))
+	{
+		new_var = ft_strdup("PWD=");
+		new_var = ft_strjoin(new_var, getcwd(NULL, 0));
+		add_var_to_env(mini, new_var);
+	}
 }
 
 void	init_struct(t_mini *mini, char **envp)
@@ -45,6 +56,7 @@ void	init_struct(t_mini *mini, char **envp)
 	mini->cmd_tab = NULL;
 	mini->envp = NULL;
 	mini->envp = init_myenvp(envp);
+	setup_findable_var(mini);
 	mini->ret = SUCCESS;
 	mini->savein = dup(0);
 	mini->saveout = dup(1);

@@ -69,13 +69,9 @@ void	cd_build(t_cmd *current, t_mini *mini)
 	path = NULL;
 	i = 0;
 	while (current->cmd_args[i])
-	{
 		i++;
-	}
-	// ft_printf("nb args =  %d\n", i);
 	if (i > 2)
 	{
-		// exit avec mini-ret modifier et l'erreur afficher
 		write(1, "minishell : cd : too many argmuents\n", 37);
 		return ;
 	}
@@ -97,10 +93,9 @@ void	cd_build(t_cmd *current, t_mini *mini)
 void	ft_go_home(char *path, t_mini *mini, char *old_pwd)
 {
 	path = get_env("HOME", mini->envp);
-	// printf("%s\n", path);
 	if (path == NULL)
 	{
-		return (printf("Home not set\n"), (void)0);
+		return (printf("mini: cd: « HOME » not set\n"), (void)0);
 	}
 	if (chdir(path) == -1)
 	{
@@ -134,8 +129,6 @@ bool	ft_is_in_env(char *str, t_mini *mini)
 		len_until_equal++;
 	while (mini->envp[i])
 	{
-		// ft_printf("zozio = %s\n", str);
-		// ft_printf(" envp =%s\n", mini->envp[i]);
 		if (ft_strncmp(str, mini->envp[i], len_until_equal) == 0)
 		{
 			free(mini->envp[i]);
@@ -187,7 +180,6 @@ char	**ft_add_to_env(t_mini *mini, char *str)
 	if (!new_env)
 		return (NULL);
 	ft_memmove(new_env, mini->envp, length_new_env * sizeof(char *));
-	// new_env[length_new_env] = ft_strdup(str);
 	free(mini->envp);
 	return (new_env);
 }
@@ -201,7 +193,6 @@ void	ft_update_env(t_mini *mini, char *old_pwd)
 	new_old_pwd = strjoin_bis("OLDPWD=", old_pwd);
 	free(old_pwd);
 	tmp = getcwd(NULL, 0);
-	// ft_printf("%s\n", tmp);
 	new_pwd = strjoin_bis("PWD=", tmp);
 	free(tmp);
 	if (ft_is_in_env(new_old_pwd, mini) == true)
@@ -211,16 +202,6 @@ void	ft_update_env(t_mini *mini, char *old_pwd)
 	free(new_old_pwd);
 	free(new_pwd);
 }
-
-/**
- * @function ft_strjoin
- * @brief Allocates (with malloc(3)) and returns a new string,
- * which is the result of the concatenation of ’s1’ and ’s2’.
- * @param s1 The prefix string.
- * @param s2 The suffix string.
- * @return The newly allocated array of strings.\n
- * NULL if the allocation fails or if s1 and s2 is NULL.
- */
 
 static char	*strjoin_bis(char const *s1, char const *s2)
 {

@@ -21,6 +21,7 @@ void	setup_here_doc(t_mini *mini, char *limiter)
 	mini->here_doc_fd = 0;
 	mini->here_doc_fd = open("/tmp/.pipex_here_doc",
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	sigaction(SIGINT, mini->sig->int_exec, NULL);
 	if (mini->here_doc_fd < 0)
 		ft_printf("ERROR");
 	while (1)
