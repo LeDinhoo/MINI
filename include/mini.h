@@ -82,6 +82,7 @@ typedef struct s_split
 	int					equal;
 	int					ret;
 	char				**myenvp;
+	char				**shenvp;
 }						t_split;
 
 typedef struct s_token
@@ -216,10 +217,10 @@ void					handle_single_quotes(t_token **head, t_split *tkn,
 							const char *str);
 void					handle_double_quotes(t_token **head, t_split *tkn,
 							const char *str);
-void					handle_single_quotes_content(t_token **head, t_split *tkn,
-							const char *str);
-void					handle_double_quotes_content(t_token **head, t_split *tkn,
-							const char *str);
+void					handle_single_quotes_content(t_token **head,
+							t_split *tkn, const char *str);
+void					handle_double_quotes_content(t_token **head,
+							t_split *tkn, const char *str);
 void					handle_less_than_operator(t_token **head, t_split *tkn,
 							const char *str);
 void					handle_greater_than_operator(t_token **head,
@@ -239,6 +240,10 @@ void					unset_build(t_cmd *current, t_mini *mini);
 bool					is_builtin(t_cmd *current);
 void					print_env(char **myenvp);
 char					*get_env(const char *name, char **myenvp);
+int						export_build(t_cmd *current, t_mini *mini);
+char					*find_var_name(char *str);
+void					modify_var_value(t_mini *mini, char *str,
+							char *var_name);
 
 // command_processing.c
 void					update_token_types(t_mini *mini);

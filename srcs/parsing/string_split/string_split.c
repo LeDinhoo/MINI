@@ -27,6 +27,7 @@ void	init_split(t_split *tkn, t_mini *mini, const char *str)
 	tkn->in_simple_quotes = 0;
 	tkn->equal = 0;
 	tkn->myenvp = mini->envp;
+	tkn->shenvp = mini->sh_envp;
 	tkn->ret = mini->ret;
 }
 

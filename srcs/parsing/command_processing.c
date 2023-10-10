@@ -30,6 +30,73 @@ void	is_cmd(t_token *current, char **env, int i)
 	}
 }
 
+void	add_var_to_shenv(t_mini *mini, char *str)
+{
+	int		len;
+	char	**new_env;
+
+	len = 0;
+	while (mini->sh_envp && mini->sh_envp[len])
+		len++;
+	new_env = ft_calloc(len + 2, sizeof(char *));
+	if (!new_env)
+		return ;
+	len = 0;
+	while (mini->sh_envp && mini->sh_envp[len])
+	{
+		new_env[len] = ft_strdup(mini->sh_envp[len]);
+		free(mini->sh_envp[len]);
+		len++;
+	}
+	new_env[len] = ft_strdup(str);
+	free(mini->sh_envp);
+	mini->sh_envp = NULL;
+	mini->sh_envp = new_env;
+	return ;
+}
+
+void	modify_shvar_value(t_mini *mini, char *str, char *var_name)
+{
+	int		len;
+	char	**new_env;
+
+	len = 0;
+	while (mini->sh_envp && mini->sh_envp[len])
+		len++;
+	new_env = ft_calloc(len + 1, sizeof(char *));
+	if (!new_env)
+		return ;
+	len = 0;
+	while (mini->sh_envp && mini->sh_envp[len])
+	{
+		if (ft_strncmp(mini->sh_envp[len], var_name, ft_strlen(var_name)) == 0)
+			new_env[len] = ft_strdup(str);
+		else
+			new_env[len] = ft_strdup(mini->sh_envp[len]);
+		free(mini->sh_envp[len]);
+		len++;
+	}
+	free(mini->sh_envp);
+	mini->sh_envp = NULL;
+	mini->sh_envp = new_env;
+	return ;
+}
+
+void	add_tmp_var(t_mini *mini, t_token *current)
+{
+	char	*var_name;
+
+	var_name = find_var_name(current->str);
+	ft_printf("%s\n", var_name);
+	if (get_env(var_name, mini->sh_envp) == NULL)
+		add_var_to_shenv(mini, current->str);
+	else
+		modify_shvar_value(mini, current->str, var_name);
+	if (get_env(var_name, mini->envp) != NULL)
+		modify_var_value(mini, current->str, var_name);
+	return ;
+}
+
 void	update_token_types(t_mini *mini)
 {
 	t_token	*current;
@@ -56,6 +123,8 @@ void	update_token_types(t_mini *mini)
 			else if (current->type != EXPORT)
 				current->type = CMD;
 		}
+		if (current->type == EXPORT)
+			add_tmp_var(mini, current);
 		current = current->next;
 	}
 }

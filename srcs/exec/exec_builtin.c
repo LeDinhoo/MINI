@@ -50,8 +50,8 @@ void	exec_bin(t_cmd *current, t_mini *mini)
 		env_build(mini);
 	else if (ft_strcmp(current->cmd_args[0], "echo") == 0)
 		echo_build(current);
-	// else if (ft_strcmp(current->cmd_args[0], "export") == 0)
-	// 	export_build(current, mini);
+	else if (ft_strcmp(current->cmd_args[0], "export") == 0)
+		export_build(current, mini);
 	return ;
 	// return (ret);
 }

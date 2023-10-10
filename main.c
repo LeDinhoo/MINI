@@ -17,7 +17,7 @@ void	print_env(char **myenvp)
 	int	len;
 
 	len = 0;
-	while (myenvp[len])
+	while (myenvp && myenvp[len])
 	{
 		ft_printf("%s\n", myenvp[len]);
 		len++;
@@ -55,9 +55,6 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		update_env(&mini);
-		// prompt = get_prompt_str(&mini);
-		// mini.input = readline(prompt);
-		////////////////////////////////////
 		ft_prompt(&mini);
 		if (mini.input == NULL)
 		{
@@ -65,16 +62,13 @@ int	main(int argc, char **argv, char **envp)
 			free_env(&mini);
 			return (0);
 		}
-		//////////////////////////////////////
 		else if (mini.input != NULL)
 		{
-			//////////////////////////////////
 			if (strcmp(mini.input, "exit") == 0)
 			{
 				printf("exit\n");
 				break ;
 			}
-			////////////////////////////////////
 			add_history(mini.input);
 			missing_quote(&mini, mini.input);
 			mini.start = split_string(mini.input, &mini);
@@ -82,9 +76,7 @@ int	main(int argc, char **argv, char **envp)
 			{
 				update_token_types(&mini);
 				execution(&mini);
-				print_args(&mini);
 			}
-			print_list(mini.start);
 			free_without_cmd(&mini);
 		}
 	}

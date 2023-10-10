@@ -49,6 +49,7 @@ void	init_struct(t_mini *mini, char **envp)
 	mini->savein = dup(0);
 	mini->saveout = dup(1);
 	mini->saveerr = dup(2);
+	mini->sh_envp = NULL;
 	get_path(mini);
 }
 
