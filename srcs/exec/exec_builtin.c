@@ -52,8 +52,8 @@ int	exec_bin(t_cmd *current, t_mini *mini)
 	else if (ft_strcmp(current->cmd_args[0], "pwd") == 0)
 		return (pwd_build());
 	else if (ft_strcmp(current->cmd_args[0], "exit") == 0)
-		exit_build(current, mini);
+		return (exit_build(current, mini));
 	else if (ft_strcmp(current->cmd_args[0], "export") == 0)
-		export_build(current, mini);
+		return (export_build(current, mini));
 	return (ret);
 }

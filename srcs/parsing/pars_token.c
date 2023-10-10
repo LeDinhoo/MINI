@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_token.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:40:34 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/18 14:22:53 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 14:20:48 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*pipe_prompt(void)
 	static char	prompt[PATH_MAX];
 
 	memset(prompt, 0, sizeof(prompt));
-	strcat(prompt, "pipe> ");
+	ft_strcat(prompt, "pipe> ");
 	return (prompt);
 }
 
@@ -26,7 +26,7 @@ char	*here_prompt(void)
 	static char	here_prompt[PATH_MAX];
 
 	memset(here_prompt, 0, sizeof(here_prompt));
-	strcat(here_prompt, "heredoc> ");
+	ft_strcat(here_prompt, "heredoc> ");
 	return (here_prompt);
 }
 

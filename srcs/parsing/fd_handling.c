@@ -3,39 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   fd_handling.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:27:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/13 14:25:46 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 18:08:00 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-void	setup_here_doc(t_mini *mini, char *limiter)
-{
-	char	*s1;
-	char	*prompt;
+int		ctrl_c_pressed = 0;
 
+void	sigint_handler(int signum)
+{
+	ctrl_c_pressed = 1;
+}
+
+void	ft_putstr_heredoc(char *s, int heredoc_fd)
+{
+	ft_putstr_fd(s, heredoc_fd);
+	ft_putstr_fd("\n", heredoc_fd);
+	free(s);
+}
+
+void	init_heredoc(t_mini *mini)
+{
 	mini->is_here_doc = 1;
 	mini->here_doc_fd = 0;
 	mini->here_doc_fd = open("/tmp/.pipex_here_doc",
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	sigaction(SIGINT, mini->sig->int_exec, NULL);
+}
+
+void	setup_here_doc(t_mini *mini, char *limiter)
+{
+	char				*s1;
+	char				*prompt;
+	struct sigaction	sa;
+
+	sa.sa_handler = sigint_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	init_heredoc(mini);
 	if (mini->here_doc_fd < 0)
-		ft_printf("ERROR");
+		return (printf("ERROR"), (void)0);
 	while (1)
 	{
 		prompt = here_prompt();
 		s1 = readline(prompt);
+		if (!s1)
+			return (printf("minishell: warning: here-document delimited by end of file (wanted '%s')\n",
+					limiter), (void)0);
+		if (ctrl_c_pressed)
+			return (ctrl_c_pressed = 0, free(s1), close(mini->here_doc_fd),
+				(void)0);
 		if (ft_strncmp(s1, limiter, ft_strlen(limiter)) == 0)
-		{
-			free(s1);
-			break ;
-		}
-		ft_putstr_fd(s1, mini->here_doc_fd);
-		ft_putstr_fd("\n", mini->here_doc_fd);
-		free(s1);
+			return (free(s1), (void)0);
+		ft_putstr_heredoc(s1, mini->here_doc_fd);
 	}
 	close(mini->here_doc_fd);
 }

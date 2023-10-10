@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_signals.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 13:24:33 by clement           #+#    #+#             */
-/*   Updated: 2023/10/05 12:53:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 18:06:47 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	ft_handle_signal_heredoc(int sig_heredoc)
 {
 	(void)sig_heredoc;
 	close(STDIN_FILENO);
+	dprintf(STDOUT_FILENO, "\n");
 	write(1, "\n", 1);
 }
 

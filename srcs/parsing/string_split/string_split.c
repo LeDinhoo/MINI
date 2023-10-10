@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_split.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 11:16:16 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 14:20:58 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	*quote_prompt(void)
 	static char	here_prompt[PATH_MAX];
 
 	memset(here_prompt, 0, sizeof(here_prompt));
-	strcat(here_prompt, "dquote> ");
+	ft_strcat(here_prompt, "dquote> ");
 	return (here_prompt);
 }
 
@@ -115,8 +115,8 @@ int	missing_quote(t_mini *mini, const char *str)
 	{
 		prompt = quote_prompt();
 		new_str = readline(prompt);
-		mini->input = strcat(mini->input, "\n");
-		mini->input = strcat(mini->input, new_str);
+		mini->input = ft_strcat(mini->input, "\n");
+		mini->input = ft_strcat(mini->input, new_str);
 		free(new_str);
 		missing_quote(mini, mini->input);
 	}

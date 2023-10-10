@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:08:29 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 16:51:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 14:42:12 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,28 @@ char	*get_prompt_str(t_mini *mini)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		cwd = "/UNKNOWN";
-	if (user_home && strcmp(cwd, user_home) == 0)
+	if (user_home && ft_strcmp(cwd, user_home) == 0)
 		directory = "~";
 	else
 	{
-		directory = strrchr(cwd, '/');
+		directory = ft_strrchr(cwd, '/');
 		if (directory == NULL)
 			directory = "UNKNOWN";
 		else
 			directory++;
 	}
 	memset(prompt, 0, sizeof(prompt));
-	strcat(prompt, "\033[90m╭─\033[0m");
-	strcat(prompt, "\033[34mMiniShell\033[92m ❯\033[0m \033[96m");
-	strcat(prompt, " ");
-	strncat(prompt, directory, PATH_MAX - strlen(prompt) - 1);
-	strcat(prompt, " \033[90m\n╰─\033[0m");
+	ft_strcat(prompt, "\033[90m╭─\033[0m");
+	ft_strcat(prompt, "\033[34mMiniShell\033[92m ❯\033[0m \033[96m");
+	ft_strcat(prompt, " ");
+	ft_strncat(prompt, directory, PATH_MAX - ft_strlen(prompt) - 1);
+	ft_strcat(prompt, " \033[90m\n╰─\033[0m");
 	if (mini->ret == SUCCESS)
-		strcat(prompt, "\033[92m❯\033[0m");
+		ft_strcat(prompt, "\033[92m❯\033[0m");
 	else
-		strcat(prompt, "\033[31m❯\033[0m");
-	strcat(prompt, "\033[33m\033[0m");
-	strcat(prompt, " ");
+		ft_strcat(prompt, "\033[31m❯\033[0m");
+	ft_strcat(prompt, "\033[33m\033[0m");
+	ft_strcat(prompt, " ");
 	return (prompt);
 }
 
