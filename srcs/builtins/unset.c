@@ -34,15 +34,13 @@ char	**init_new_envp(char **myenvp)
 	i = 0;
 	while (myenvp[i])
 		i++;
-	// new_env = ft_calloc(1, sizeof(char **));
 	new_env = ft_calloc(i + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
-	// new_env[i + 1] = NULL;
 	return (new_env);
 }
 
-void	unset_build(t_cmd *current, t_mini *mini)
+int	unset_build(t_cmd *current, t_mini *mini)
 {
 	char	**new_env;
 	int		i;
@@ -72,4 +70,5 @@ void	unset_build(t_cmd *current, t_mini *mini)
 	}
 	free_envp(mini->envp);
 	mini->envp = new_env;
+	return (0);
 }

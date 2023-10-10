@@ -28,30 +28,32 @@ bool	is_builtin(t_cmd *current)
 		return (false);
 }
 
-void	env_build(t_mini *mini)
+int	env_build(t_mini *mini)
 {
 	print_env(mini->envp);
+	return (0);
 }
 
-void	exec_bin(t_cmd *current, t_mini *mini)
+int	exec_bin(t_cmd *current, t_mini *mini)
 {
 	int	ret;
 
 	ret = 0;
-	// toute les builtin doivent avoir cette norm : ret = unset_build(current,
-		// mini);
 	if (!current->cmd_args)
-		return ;
+		return (1);
 	if (ft_strcmp(current->cmd_args[0], "unset") == 0)
-		unset_build(current, mini);
+		return (unset_build(current, mini));
 	else if (ft_strcmp(current->cmd_args[0], "cd") == 0)
 		return (cd_build(current, mini));
 	else if (ft_strcmp(current->cmd_args[0], "env") == 0)
-		env_build(mini);
+		return (env_build(mini));
 	else if (ft_strcmp(current->cmd_args[0], "echo") == 0)
-		echo_build(current);
+		return (echo_build(current));
+	else if (ft_strcmp(current->cmd_args[0], "pwd") == 0)
+		return (pwd_build());
+	else if (ft_strcmp(current->cmd_args[0], "exit") == 0)
+		return (exit_build(current, mini));
 	else if (ft_strcmp(current->cmd_args[0], "export") == 0)
-		export_build(current, mini);
-	return ;
-	// return (ret);
+		return (export_build(current, mini));
+	return (ret);
 }

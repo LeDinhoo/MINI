@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/05 16:33:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 16:33:55 by hdupuy           ###   ########.fr       */
+/*   Created: 2023/10/10 14:09:56 by dinho             #+#    #+#             */
+/*   Updated: 2023/10/10 14:18:03 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini.h"
+#include "libft.h"
 
-int	pwd_build(void)
+char	*ft_strcat(char *destination, const char *source)
 {
-	char *str;
-
-	str = getcwd(NULL, 0);
-	if (str == NULL)
+	while (*destination)
 	{
-		dprintf(STDERR_FILENO, "mini: pwd: %s\n", strerror(errno));
-		return (1);
+		destination++;
 	}
-	else
-		printf("%s\n", str);
-	free(str);
-	return (0);
+	while (*source)
+	{
+		*destination = *source;
+		destination++;
+		source++;
+	}
+	*destination = '\0';
+	return (destination);
 }

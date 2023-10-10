@@ -57,7 +57,7 @@ int	one_command(t_mini *mini, t_cmd *current, int pipe_fd[2], int i)
 	redir_and_ret(current, &ret, mini);
 	if (current->cmd)
 	{
-		exec_bin(current, mini);
+		ret = exec_bin(current, mini);
 		clean_redir(mini);
 		return (ret);
 	}
@@ -109,7 +109,7 @@ void	iterate_commands(t_mini *mini)
 		sigaction(SIGQUIT, mini->sig->quit_parent, NULL);
 		if (is_builtin(current) && !current->next)
 		{
-			one_command(mini, current, pipe_fd, i);
+			mini->ret = one_command(mini, current, pipe_fd, i);
 			return ;
 		}
 		if (current->is_last == 0)
@@ -135,12 +135,18 @@ void	iterate_commands(t_mini *mini)
 
 int	execution(t_mini *mini)
 {
+	int	ret;
+
+	ret = 0;
 	cmd_args(mini);
 	mini->nb_steps = cmd_numbers(mini->cmd_tab);
 	if (is_only(mini) == 0)
 		return (0);
 	set_last_cmd(mini);
 	iterate_commands(mini);
-	mini->ret = wait_for_children();
+	if (is_builtin(mini->cmd_tab) && !mini->cmd_tab->next)
+		wait_for_children();
+	else
+		mini->ret = wait_for_children();
 	return (0);
 }

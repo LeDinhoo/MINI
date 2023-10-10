@@ -28,6 +28,8 @@ void	update_env(t_mini *mini)
 {
 	free_env(mini);
 	get_path(mini);
+	if (!get_env("PWD", mini->envp))
+		ft_printf("PWD environment variable not set");
 }
 
 void	ft_prompt(t_mini *mini)
@@ -56,19 +58,8 @@ int	main(int argc, char **argv, char **envp)
 	{
 		update_env(&mini);
 		ft_prompt(&mini);
-		if (mini.input == NULL)
+		if (mini.input != NULL)
 		{
-			write(1, "exit\n", 5);
-			free_env(&mini);
-			return (0);
-		}
-		else if (mini.input != NULL)
-		{
-			if (strcmp(mini.input, "exit") == 0)
-			{
-				printf("exit\n");
-				break ;
-			}
 			add_history(mini.input);
 			missing_quote(&mini, mini.input);
 			mini.start = split_string(mini.input, &mini);
@@ -78,6 +69,13 @@ int	main(int argc, char **argv, char **envp)
 				execution(&mini);
 			}
 			free_without_cmd(&mini);
+		}
+		else
+		{
+			printf("exit\n");
+			free_signals(&mini);
+			free_env(&mini);
+			return (0);
 		}
 	}
 	free_env(&mini);

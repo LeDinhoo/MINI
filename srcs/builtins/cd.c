@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:08:29 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 16:51:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 14:42:12 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,32 +35,32 @@ char	*get_prompt_str(t_mini *mini)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		cwd = "/UNKNOWN";
-	if (user_home && strcmp(cwd, user_home) == 0)
+	if (user_home && ft_strcmp(cwd, user_home) == 0)
 		directory = "~";
 	else
 	{
-		directory = strrchr(cwd, '/');
+		directory = ft_strrchr(cwd, '/');
 		if (directory == NULL)
 			directory = "UNKNOWN";
 		else
 			directory++;
 	}
 	memset(prompt, 0, sizeof(prompt));
-	strcat(prompt, "\033[90m╭─\033[0m");
-	strcat(prompt, "\033[34mMiniShell\033[92m ❯\033[0m \033[96m");
-	strcat(prompt, " ");
-	strncat(prompt, directory, PATH_MAX - strlen(prompt) - 1);
-	strcat(prompt, " \033[90m\n╰─\033[0m");
+	ft_strcat(prompt, "\033[90m╭─\033[0m");
+	ft_strcat(prompt, "\033[34mMiniShell\033[92m ❯\033[0m \033[96m");
+	ft_strcat(prompt, " ");
+	ft_strncat(prompt, directory, PATH_MAX - ft_strlen(prompt) - 1);
+	ft_strcat(prompt, " \033[90m\n╰─\033[0m");
 	if (mini->ret == SUCCESS)
-		strcat(prompt, "\033[92m❯\033[0m");
+		ft_strcat(prompt, "\033[92m❯\033[0m");
 	else
-		strcat(prompt, "\033[31m❯\033[0m");
-	strcat(prompt, "\033[33m\033[0m");
-	strcat(prompt, " ");
+		ft_strcat(prompt, "\033[31m❯\033[0m");
+	ft_strcat(prompt, "\033[33m\033[0m");
+	ft_strcat(prompt, " ");
 	return (prompt);
 }
 
-void	cd_build(t_cmd *current, t_mini *mini)
+int	cd_build(t_cmd *current, t_mini *mini)
 {
 	char	*path;
 	char	*old_pwd;
@@ -69,15 +69,11 @@ void	cd_build(t_cmd *current, t_mini *mini)
 	path = NULL;
 	i = 0;
 	while (current->cmd_args[i])
-	{
 		i++;
-	}
-	// ft_printf("nb args =  %d\n", i);
 	if (i > 2)
 	{
-		// exit avec mini-ret modifier et l'erreur afficher
 		write(1, "minishell : cd : too many argmuents\n", 37);
-		return ;
+		return (1);
 	}
 	old_pwd = getcwd(NULL, 0);
 	if (!current->cmd_args[1])
@@ -90,33 +86,33 @@ void	cd_build(t_cmd *current, t_mini *mini)
 		path = current->cmd_args[1];
 	if (chdir(path) == -1)
 		return (dprintf(STDERR_FILENO, "cd: %s: %s\n", path, strerror(errno)),
-			(void)0);
-	return (ft_update_env(mini, old_pwd), (void)0);
+			1);
+	return (ft_update_env(mini, old_pwd));
 }
 
-void	ft_go_home(char *path, t_mini *mini, char *old_pwd)
+int	ft_go_home(char *path, t_mini *mini, char *old_pwd)
 {
 	path = get_env("HOME", mini->envp);
-	// printf("%s\n", path);
 	if (path == NULL)
 	{
-		return (printf("Home not set\n"), (void)0);
+		printf("mini: cd: « HOME » not set\n");
+		return (1);
 	}
 	if (chdir(path) == -1)
 	{
-		return (printf("cd: %s: No such file or directory\n", path), (void)0);
+		return (printf("cd: %s: No such file or directory\n", path), 1);
 	}
-	return (ft_update_env(mini, old_pwd), (void)0);
+	return (ft_update_env(mini, old_pwd));
 }
 
-void	ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd)
+int	ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd)
 {
 	path = get_env("OLDPWD", mini->envp);
 	if (path == NULL)
-		return (printf("mini: cd: OLDPWD not set\n"), (void)1);
+		return (printf("mini: cd: OLDPWD not set\n"), 1);
 	if (chdir(path) == -1)
-		return (printf("cd : %s: No such file or directory\n", path), (void)0);
-	return (ft_update_env(mini, old_pwd), (void)0);
+		return (printf("cd : %s: No such file or directory\n", path), 1);
+	return (ft_update_env(mini, old_pwd));
 }
 
 bool	ft_is_in_env(char *str, t_mini *mini)
@@ -134,8 +130,6 @@ bool	ft_is_in_env(char *str, t_mini *mini)
 		len_until_equal++;
 	while (mini->envp[i])
 	{
-		// ft_printf("zozio = %s\n", str);
-		// ft_printf(" envp =%s\n", mini->envp[i]);
 		if (ft_strncmp(str, mini->envp[i], len_until_equal) == 0)
 		{
 			free(mini->envp[i]);
@@ -187,12 +181,11 @@ char	**ft_add_to_env(t_mini *mini, char *str)
 	if (!new_env)
 		return (NULL);
 	ft_memmove(new_env, mini->envp, length_new_env * sizeof(char *));
-	// new_env[length_new_env] = ft_strdup(str);
 	free(mini->envp);
 	return (new_env);
 }
 
-void	ft_update_env(t_mini *mini, char *old_pwd)
+int	ft_update_env(t_mini *mini, char *old_pwd)
 {
 	char	*new_old_pwd;
 	char	*new_pwd;
@@ -201,7 +194,6 @@ void	ft_update_env(t_mini *mini, char *old_pwd)
 	new_old_pwd = strjoin_bis("OLDPWD=", old_pwd);
 	free(old_pwd);
 	tmp = getcwd(NULL, 0);
-	// ft_printf("%s\n", tmp);
 	new_pwd = strjoin_bis("PWD=", tmp);
 	free(tmp);
 	if (ft_is_in_env(new_old_pwd, mini) == true)
@@ -210,17 +202,8 @@ void	ft_update_env(t_mini *mini, char *old_pwd)
 		mini->envp = ft_add_to_env(mini, new_pwd);
 	free(new_old_pwd);
 	free(new_pwd);
+	return (0);
 }
-
-/**
- * @function ft_strjoin
- * @brief Allocates (with malloc(3)) and returns a new string,
- * which is the result of the concatenation of ’s1’ and ’s2’.
- * @param s1 The prefix string.
- * @param s2 The suffix string.
- * @return The newly allocated array of strings.\n
- * NULL if the allocation fails or if s1 and s2 is NULL.
- */
 
 static char	*strjoin_bis(char const *s1, char const *s2)
 {

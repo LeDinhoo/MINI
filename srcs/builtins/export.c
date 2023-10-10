@@ -98,8 +98,8 @@ char	*get_var_str(char **envp, char *str)
 
 int	export_build(t_cmd *current, t_mini *mini)
 {
-	t_token *cur_tkn;
-	char *var_name;
+	t_token	*cur_tkn;
+	char	*var_name;
 
 	cur_tkn = mini->start;
 	while (cur_tkn)
