@@ -277,8 +277,8 @@ int						wait_for_children(void);
 
 // srcs/exec/exec_builtin.c
 bool					is_builtin(t_cmd *current);
-void					env_build(t_mini *mini);
-void					exec_bin(t_cmd *current, t_mini *mini);
+int						env_build(t_mini *mini);
+int						exec_bin(t_cmd *current, t_mini *mini);
 
 // srcs/exec/exec.c
 int						execute_cmd(t_mini *mini, t_cmd *current,
@@ -327,20 +327,20 @@ int						ft_isalpha(char c);
 ///////////////SRCS/BUILTINS/////////////////////
 // srcs/builtins/cd.c
 char					*get_prompt_str(t_mini *mini);
-void					cd_build(t_cmd *current, t_mini *mini);
-void					ft_go_home(char *path, t_mini *mini, char *old_pwd);
-void					ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd);
+int						cd_build(t_cmd *current, t_mini *mini);
+int						ft_go_home(char *path, t_mini *mini, char *old_pwd);
+int						ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd);
 bool					ft_is_in_env(char *str, t_mini *mini);
 bool					only_key_already_in_env(char *str, t_mini *mini);
 bool					check_for_equal(const char *str);
 char					**ft_add_to_env(t_mini *mini, char *str);
-void					ft_update_env(t_mini *mini, char *old_pwd);
+int						ft_update_env(t_mini *mini, char *old_pwd);
 
 // srcs/builtins/echo.c
-void					echo_build(t_cmd *current);
+int						echo_build(t_cmd *current);
 
 // srcs/builtins/exit.c
-void					exit_build(t_cmd *current, t_mini *mini);
+int					exit_build(t_cmd *current, t_mini *mini);
 int						get_return_value(char **argv, bool *is_error,
 							t_mini *mini);
 
@@ -353,12 +353,12 @@ char					*get_var_str(char **envp, char *str);
 int						export_build(t_cmd *current, t_mini *mini);
 
 // srcs/builtins/pwd.c
-void					pwd_build(void);
+int						pwd_build(void);
 
 // srcs/builtins/unset.c
 void					free_envp(char **envp);
 char					**init_new_envp(char **myenvp);
-void					unset_build(t_cmd *current, t_mini *mini);
+int						unset_build(t_cmd *current, t_mini *mini);
 
 // srcs/builtins/utils.c
 size_t					ft_lengh_array(char **array);

@@ -60,7 +60,7 @@ char	*get_prompt_str(t_mini *mini)
 	return (prompt);
 }
 
-void	cd_build(t_cmd *current, t_mini *mini)
+int	cd_build(t_cmd *current, t_mini *mini)
 {
 	char	*path;
 	char	*old_pwd;
@@ -73,7 +73,7 @@ void	cd_build(t_cmd *current, t_mini *mini)
 	if (i > 2)
 	{
 		write(1, "minishell : cd : too many argmuents\n", 37);
-		return ;
+		return (1);
 	}
 	old_pwd = getcwd(NULL, 0);
 	if (!current->cmd_args[1])
@@ -86,32 +86,33 @@ void	cd_build(t_cmd *current, t_mini *mini)
 		path = current->cmd_args[1];
 	if (chdir(path) == -1)
 		return (dprintf(STDERR_FILENO, "cd: %s: %s\n", path, strerror(errno)),
-			(void)0);
-	return (ft_update_env(mini, old_pwd), (void)0);
+			1);
+	return (ft_update_env(mini, old_pwd));
 }
 
-void	ft_go_home(char *path, t_mini *mini, char *old_pwd)
+int	ft_go_home(char *path, t_mini *mini, char *old_pwd)
 {
 	path = get_env("HOME", mini->envp);
 	if (path == NULL)
 	{
-		return (printf("mini: cd: « HOME » not set\n"), (void)0);
+		printf("mini: cd: « HOME » not set\n");
+		return (1);
 	}
 	if (chdir(path) == -1)
 	{
-		return (printf("cd: %s: No such file or directory\n", path), (void)0);
+		return (printf("cd: %s: No such file or directory\n", path), 1);
 	}
-	return (ft_update_env(mini, old_pwd), (void)0);
+	return (ft_update_env(mini, old_pwd));
 }
 
-void	ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd)
+int	ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd)
 {
 	path = get_env("OLDPWD", mini->envp);
 	if (path == NULL)
-		return (printf("mini: cd: OLDPWD not set\n"), (void)1);
+		return (printf("mini: cd: OLDPWD not set\n"), 1);
 	if (chdir(path) == -1)
-		return (printf("cd : %s: No such file or directory\n", path), (void)0);
-	return (ft_update_env(mini, old_pwd), (void)0);
+		return (printf("cd : %s: No such file or directory\n", path), 1);
+	return (ft_update_env(mini, old_pwd));
 }
 
 bool	ft_is_in_env(char *str, t_mini *mini)
@@ -184,7 +185,7 @@ char	**ft_add_to_env(t_mini *mini, char *str)
 	return (new_env);
 }
 
-void	ft_update_env(t_mini *mini, char *old_pwd)
+int	ft_update_env(t_mini *mini, char *old_pwd)
 {
 	char	*new_old_pwd;
 	char	*new_pwd;
@@ -201,6 +202,7 @@ void	ft_update_env(t_mini *mini, char *old_pwd)
 		mini->envp = ft_add_to_env(mini, new_pwd);
 	free(new_old_pwd);
 	free(new_pwd);
+	return (0);
 }
 
 static char	*strjoin_bis(char const *s1, char const *s2)

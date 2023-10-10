@@ -12,7 +12,7 @@
 
 #include "mini.h"
 
-void	echo_build(t_cmd *current)
+int	echo_build(t_cmd *current)
 {
 	int	i;
 	int	n;
@@ -36,5 +36,5 @@ void	echo_build(t_cmd *current)
 	}
 	if (n == 0)
 		printf("\n");
-	return ;
+	return (0);
 }

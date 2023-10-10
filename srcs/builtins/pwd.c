@@ -12,14 +12,18 @@
 
 #include "mini.h"
 
-void	pwd_build(void)
+int	pwd_build(void)
 {
-	char	*str;
+	char *str;
 
 	str = getcwd(NULL, 0);
 	if (str == NULL)
-		dprintf(STDERR_FILENO, "pwd: %s\n", strerror(errno));
+	{
+		dprintf(STDERR_FILENO, "mini: pwd: %s\n", strerror(errno));
+		return (1);
+	}
 	else
 		printf("%s\n", str);
 	free(str);
+	return (0);
 }

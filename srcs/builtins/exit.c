@@ -12,7 +12,7 @@
 
 #include "mini.h"
 
-void	exit_build(t_cmd *current, t_mini *mini)
+int	exit_build(t_cmd *current, t_mini *mini)
 {
 	int		ret_val;
 	bool	is_error;
@@ -20,11 +20,14 @@ void	exit_build(t_cmd *current, t_mini *mini)
 	is_error = false;
 	ret_val = get_return_value(current->cmd_args, &is_error, mini);
 	if (ret_val == 1 && is_error)
-		return (printf("exit \n Minishell: exit: too many arguments\n"),
-			(void)0);
+	{
+		printf("exit \n Minishell: exit: too many arguments\n");
+		return (1);
+	}
 	free_env(mini);
 	if (ret_val == 2 && is_error)
 		printf("Minishell: exit: required numerical argument\n");
+	mini->ret = ret_val;
 	exit(ret_val);
 }
 
