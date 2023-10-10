@@ -16,7 +16,7 @@ void	handle_last_return_value(t_switch *swap, t_split *tkn)
 {
 	swap->variablevalue = ft_itoa(tkn->ret);
 	swap->substitutedtoken = replace_substring(swap->substitutedtoken,
-		swap->variablename, swap->variablevalue);
+			swap->variablename, swap->variablevalue);
 	swap->is_switch = 1;
 	free(swap->variablevalue);
 }
@@ -25,6 +25,8 @@ char	*get_env(const char *name, char **myenvp)
 {
 	char	*env_entry;
 
+	if (!myenvp)
+		return (NULL);
 	for (int i = 0; myenvp[i] != NULL; i++)
 	{
 		env_entry = myenvp[i];
@@ -38,8 +40,10 @@ char	*get_env(const char *name, char **myenvp)
 void	handle_classic_env_value(t_switch *swap, t_split *tkn)
 {
 	swap->variablevalue = get_env(swap->variablename + 1, tkn->myenvp);
+	if (swap->variablevalue == NULL)
+		swap->variablevalue = get_env(swap->variablename + 1, tkn->shenvp);
 	swap->substitutedtoken = replace_substring(swap->substitutedtoken,
-		swap->variablename, swap->variablevalue);
+			swap->variablename, swap->variablevalue);
 	swap->is_switch = 1;
 }
 
@@ -61,7 +65,7 @@ char	*substitute_quote(char *token, t_split *tkn)
 			{
 				swap.variablename = "'";
 				swap.substitutedtoken = replace_substring(swap.substitutedtoken,
-					swap.variablename, swap.variablevalue);
+						swap.variablename, swap.variablevalue);
 				is_open = '\'';
 			}
 			else
@@ -73,7 +77,7 @@ char	*substitute_quote(char *token, t_split *tkn)
 			{
 				swap.variablename = "\"";
 				swap.substitutedtoken = replace_substring(swap.substitutedtoken,
-					swap.variablename, swap.variablevalue);
+						swap.variablename, swap.variablevalue);
 				is_open = '\"';
 			}
 			else
@@ -95,7 +99,7 @@ char	*substitute_variable_value(char *token, t_split *tkn)
 		&& tkn->in_simple_quotes == 0)
 	{
 		swap.variablename = find_dollar_value(swap.substitutedtoken,
-			ft_strichr(swap.substitutedtoken, '$'));
+				ft_strichr(swap.substitutedtoken, '$'));
 		if (ft_strcmp(swap.variablename, "$?") == 0)
 			handle_last_return_value(&swap, tkn);
 		else

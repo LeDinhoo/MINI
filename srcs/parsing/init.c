@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 05:46:30 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 16:03:50 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	**init_myenvp(char **envp)
 		return (NULL);
 	while (envp[len])
 		len++;
-	myenvp = ft_calloc(len, sizeof(char *));
+	myenvp = ft_calloc(len + 1, sizeof(char *));
 	if (!myenvp)
 		return (NULL);
 	len = 0;
@@ -32,6 +32,7 @@ char	**init_myenvp(char **envp)
 		myenvp[len] = ft_strdup(envp[len]);
 		len++;
 	}
+	// myenvp[len] = NULL;
 	return (myenvp);
 }
 
@@ -48,6 +49,7 @@ void	init_struct(t_mini *mini, char **envp)
 	mini->savein = dup(0);
 	mini->saveout = dup(1);
 	mini->saveerr = dup(2);
+	mini->sh_envp = NULL;
 	get_path(mini);
 }
 

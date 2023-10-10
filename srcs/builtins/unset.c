@@ -6,7 +6,7 @@
 /*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 08:43:30 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/29 12:13:03 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/06 16:04:03 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ char	**init_new_envp(char **myenvp)
 	i = 0;
 	while (myenvp[i])
 		i++;
-	new_env = ft_calloc(i, sizeof(char *));
+	// new_env = ft_calloc(1, sizeof(char **));
+	new_env = ft_calloc(i + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
-	new_env[i] = NULL;
+	// new_env[i + 1] = NULL;
 	return (new_env);
 }
 
