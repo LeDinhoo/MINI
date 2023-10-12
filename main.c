@@ -6,11 +6,13 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/12 14:56:04 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 19:56:08 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+int		g_ctrl_c_press;
 
 void	print_env(char **myenvp)
 {
@@ -54,7 +56,6 @@ void	go_cmd(t_mini *mini)
 		update_token_types(mini);
 		execution(mini);
 	}
-	// print_list(mini->start);
 	free_without_cmd(mini);
 }
 
@@ -73,9 +74,7 @@ int	main(int argc, char **argv, char **envp)
 		update_env(&mini);
 		ft_prompt(&mini);
 		if (mini.input != NULL)
-		{
 			go_cmd(&mini);
-		}
 		else
 		{
 			printf("exit\n");

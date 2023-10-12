@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 18:17:07 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/10/12 12:41:15 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 20:10:26 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*quote_prompt(void)
 {
 	static char	here_prompt[PATH_MAX];
 
-	memset(here_prompt, 0, sizeof(here_prompt));
+	ft_memset(here_prompt, 0, sizeof(here_prompt));
 	ft_strcat(here_prompt, "dquote> ");
 	return (here_prompt);
 }
@@ -57,29 +57,29 @@ int	is_quotes_open(const char *str)
 	return (1);
 }
 
-void	new_input(t_mini *mini)
+void	missing_quote(t_mini *mini)
 {
-	char	*prompt;
-	char	*new_str;
-	char	*new_input;
+	struct sigaction	sa;
+	char				*prompt;
+	char				*new_str;
+	char				*new_input;
 
-	prompt = quote_prompt();
-	new_str = readline(prompt);
-	new_input = ft_calloc((ft_strlen(new_str) + ft_strlen(mini->input)) + 1,
-			sizeof(char));
-	ft_strcat(new_input, mini->input);
-	ft_strcat(new_input, "\n");
-	ft_strcat(new_input, new_str);
-	free(new_str);
-	free(mini->input);
-	mini->input = NULL;
-	mini->input = ft_strdup(new_input);
-	free(new_input);
-}
-
-int	missing_quote(t_mini *mini)
-{
+	sa.sa_handler = sigint_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
 	while (is_quotes_open(mini->input))
-		new_input(mini);
-	return (0);
+	{
+		prompt = quote_prompt();
+		new_str = readline(prompt);
+		if (!new_str)
+			return (printf(H_D_DELIM "(wanted '')\n"), (void)0);
+		if (g_ctrl_c_press)
+			return (g_ctrl_c_press = 0, (void)0);
+		new_str = strjoin_bis("\n", new_str);
+		new_str = ft_strjoin(mini->input, new_str);
+		mini->input = ft_strdup(new_str);
+		free(new_str);
+	}
+	return ;
 }

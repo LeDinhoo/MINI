@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 20:02:20 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/10/12 13:03:20 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 18:26:17 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_prompt_str(t_mini *mini)
 	sigaction(SIGINT, mini->sig->int_prompt, NULL);
 	sigaction(SIGQUIT, mini->sig->quit_prompt, mini->sig->quit_exec);
 	directory = get_current_directory(mini);
-	memset(prompt, 0, sizeof(prompt));
+	ft_memset(prompt, 0, sizeof(prompt));
 	build_prompt(prompt, directory, mini);
 	return (prompt);
 }

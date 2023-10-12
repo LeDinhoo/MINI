@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc -g3
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = 
 INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) 
 
@@ -20,6 +20,7 @@ PRINTF = $(addprefix $(PRINTF_DIR), $(PRINTF_A))
 SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/init.c \
 		$(SRC_DIR)/srcs/parsing/command_processing.c \
+		$(SRC_DIR)/srcs/parsing/command_processing2.c \
 		$(SRC_DIR)/srcs/parsing/memory_management.c \
 		$(SRC_DIR)/srcs/parsing/node_management.c \
 		$(SRC_DIR)/srcs/parsing/path.c \

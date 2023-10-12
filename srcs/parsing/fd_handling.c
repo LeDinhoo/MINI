@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   fd_handling.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:27:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/10 21:25:06 by cbacquet         ###   ########.fr       */
+/*   Updated: 2023/10/12 19:56:23 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int		g_ctrl_c_pressed = 0;
-
 void	sigint_handler(int signum)
 {
 	if (signum == SIGINT)
-		g_ctrl_c_pressed = 1;
+		g_ctrl_c_press = 1;
 }
 
 void	ft_putstr_heredoc(char *s, int heredoc_fd)
@@ -54,8 +52,8 @@ void	setup_here_doc(t_mini *mini, char *limiter)
 		s1 = readline(prompt);
 		if (!s1)
 			return (printf(H_D_DELIM "(wanted '%s')\n", limiter), (void)0);
-		if (g_ctrl_c_pressed)
-			return (g_ctrl_c_pressed = 0, free(s1), close(mini->here_doc_fd),
+		if (g_ctrl_c_press)
+			return (g_ctrl_c_press = 0, free(s1), close(mini->here_doc_fd),
 				(void)0);
 		if (ft_strncmp(s1, limiter, ft_strlen(limiter)) == 0)
 			return (free(s1), (void)0);

@@ -6,14 +6,13 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 19:55:40 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/10/12 12:55:21 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 20:11:47 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-static char	*joning(char *result, char *s2, char *s1);
-static char	*strjoin_bis(char const *s1, char const *s2);
+char	*joning(char *result, char *s2, char *s1);
 
 bool	check_for_equal(const char *str)
 {
@@ -63,7 +62,7 @@ int	ft_update_env(t_mini *mini, char *old_pwd)
 	return (0);
 }
 
-static char	*strjoin_bis(char const *s1, char const *s2)
+char	*strjoin_bis(char const *s1, char const *s2)
 {
 	size_t	joined_size;
 	char	*result;
@@ -85,7 +84,7 @@ static char	*strjoin_bis(char const *s1, char const *s2)
 	return (joning(result, (char *)s2, (char *)s1));
 }
 
-static char	*joning(char *result, char *s2, char *s1)
+char	*joning(char *result, char *s2, char *s1)
 {
 	size_t	x;
 	size_t	y;
