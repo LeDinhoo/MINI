@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 04:30:30 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/12 14:17:56 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 15:54:45 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ char	*find_var_name(char *str)
 		var_name[i] = str[i];
 		i++;
 	}
-	printf("zizizizi%s\n", var_name);
-	printf("len: %ld\n", ft_strlen(var_name));
 	return (var_name);
 }
 

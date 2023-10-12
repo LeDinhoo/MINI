@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/12 13:23:40 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 20:11:51 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@
 # define SUCCESS 0
 # define IS_DIRECTORY 126
 # define UNKNOWN_COMMAND 127
-# define H_D_DELIM "minishell: warning: here-document delimited by end of file"
 
+# define H_D_DELIM "minishell: warning: here-document delimited by end of file"
 # define PIPE_ERR "Syntax error: \"|\" unexpected"
 # define LINE_ERR "Syntax error: newline unexpected"
+
+extern int				g_ctrl_c_press;
 
 typedef struct s_switch
 {
@@ -170,12 +172,19 @@ void					modify_shvar_value(t_mini *mini, char *str,
 							char *var_name);
 void					add_tmp_var(t_mini *mini, t_token *current);
 
+// srcs/parsing/command_processing2.c
+void					handle_exportable_type(t_token *current, int only_nine,
+							int is_export, t_mini *mini);
+void					export_and_only(t_mini *mini, int *is_export,
+							int *only_nine);
+
 // srcs/parsing/error_handling.c
 int						pipe_error(t_token *current);
 int						redirection_error(t_token *current);
 
 // srcs/parsing/fd_handling.c
 void					setup_here_doc(t_mini *mini, char *limiter);
+void					sigint_handler(int signum);
 
 // srcs/parsing/init.c
 void					init_expect(t_expect *ex);
@@ -272,7 +281,7 @@ char					*quote_prompt(void);
 int						quotes_checking(const char *str, int is_open, int i);
 int						is_quotes_open(const char *str);
 void					new_input(t_mini *mini);
-int						missing_quote(t_mini *mini);
+void					missing_quote(t_mini *mini);
 
 ///////////////SRCS/EXEC/////////////////////
 
@@ -372,6 +381,7 @@ char					*get_var_str(char **envp, char *str);
 
 // srcs/builtins/export2.c
 int						export_build(t_mini *mini);
+int						is_in_export(const char *name, char **myenvp);
 
 // srcs/builtins/pwd.c
 int						pwd_build(void);
@@ -389,6 +399,7 @@ void					ft_free_array(char **array);
 bool					check_for_equal(const char *str);
 char					**ft_add_to_env(t_mini *mini);
 int						ft_update_env(t_mini *mini, char *old_pwd);
+char					*strjoin_bis(char const *s1, char const *s2);
 
 // main.c
 void					print_env(char **myenvp);

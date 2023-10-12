@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/12 14:23:23 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 18:24:46 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,18 @@ void	add_tmp_var(t_mini *mini, t_token *current)
 	char	*var_name;
 
 	var_name = find_var_name(current->str);
-	if (get_env(var_name, mini->sh_envp) == NULL)
-		add_var_to_shenv(mini, current->str);
+	if (ft_strlen(var_name) != 0 && is_in_export(var_name, mini->sh_envp) == 0)
+	{
+		if (ft_strchr(current->str, '=') != NULL)
+			modify_shvar_value(mini, current->str, var_name);
+	}
 	else
-		modify_shvar_value(mini, current->str, var_name);
-	if (get_env(var_name, mini->envp) != NULL)
-		modify_var_value(mini, current->str, var_name);
+		add_var_to_shenv(mini, current->str);
+	if (ft_strlen(var_name) != 0 && is_in_export(var_name, mini->envp) == 0)
+	{
+		if (ft_strchr(current->str, '=') != NULL)
+			modify_var_value(mini, current->str, var_name);
+	}
 	return ;
 }
 
@@ -94,8 +100,13 @@ void	update_token_types(t_mini *mini)
 {
 	t_token	*current;
 	int		redirection;
+	int		is_export;
+	int		only_nine;
 
+	is_export = 0;
 	redirection = 0;
+	only_nine = 0;
+	export_and_only(mini, &is_export, &only_nine);
 	current = mini->start;
 	while (current != NULL)
 	{
@@ -109,40 +120,7 @@ void	update_token_types(t_mini *mini)
 			redirection = 0;
 		}
 		set_command_type(current, &redirection);
-		if (current->type == EXPORT)
-			add_tmp_var(mini, current);
+		handle_exportable_type(current, only_nine, is_export, mini);
 		current = current->next;
 	}
 }
-
-/*void	update_token_types(t_mini *mini)
-{
-	t_token	*current;
-	int		redirection;
-
-	redirection = 0;
-	current = mini->start;
-	while (current != NULL)
-	{
-		if (is_here_doc(current))
-			setup_here_doc(mini, current->next->str);
-		if (current->next && redirection == 1)
-		{
-			current = current->next;
-			if (current->type != EXPORT)
-				current->type = CMD;
-			redirection = 0;
-		}
-		if (!current->prev || current->prev->type == PIPE)
-		{
-			if (current->type == HEREDOC || current->type == INPUT
-				|| current->type == APPEND || current->type == TRUNC)
-				redirection = 1;
-			else if (current->type != EXPORT)
-				current->type = CMD;
-		}
-		if (current->type == EXPORT)
-			add_tmp_var(mini, current);
-		current = current->next;
-	}
-}*/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 16:03:50 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 18:49:25 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,26 @@ char	**init_myenvp(char **envp)
 void	setup_findable_var(t_mini *mini)
 {
 	char	*new_var;
+	int		i;
+	char	*nbshlvl;
 
 	if (!get_env("PWD", mini->envp))
 	{
 		new_var = ft_strdup("PWD=");
 		new_var = ft_strjoin(new_var, getcwd(NULL, 0));
+		add_var_to_env(mini, new_var);
+	}
+	if (get_env("SHLVL", mini->envp))
+	{
+		nbshlvl = getenv("SHLVL");
+		ft_printf("%s\n", nbshlvl);
+		new_var = ft_strdup("SHLVL=");
+		new_var = ft_strjoin(new_var, ft_itoa(i));
+		modify_var_value(mini, new_var, "SHLVL");
+	}
+	else if (!get_env("SHLVL", mini->envp))
+	{
+		new_var = ft_strdup("SHLVL=1");
 		add_var_to_env(mini, new_var);
 	}
 }
