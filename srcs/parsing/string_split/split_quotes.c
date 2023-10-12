@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 16:38:00 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 11:15:58 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 21:19:41 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,9 @@ int	quote_count(const char *str, int i)
 {
 	int	nb_quote;
 	int	is_open;
-	int	is_sep;
 
 	nb_quote = 0;
 	is_open = 1;
-	is_sep = 0;
 	while (str[i] && is_open == 1)
 	{
 		if (str[i] == '\"')
@@ -73,11 +71,9 @@ int	single_quote_count(const char *str, int i)
 {
 	int	nb_quote;
 	int	is_open;
-	int	is_sep;
 
 	nb_quote = 0;
 	is_open = 1;
-	is_sep = 0;
 	while (str[i] && is_open == 1)
 	{
 		if (str[i] == '\'')
@@ -91,10 +87,11 @@ int	single_quote_count(const char *str, int i)
 	return (nb_quote);
 }
 
-void	handle_single_quotes_content(t_token **head, t_split *tkn, const char *str)
+void	handle_single_quotes_content(t_token **head,
+		t_split *tkn, const char *str)
 {
-	while (tkn->end <= tkn->length && (ft_strichr("<>;| ", str[tkn->end + 1]) ==
-			-1) && str[tkn->end + 1] != '\0')
+	while (tkn->end <= tkn->length && (ft_strichr("<>;| ",
+				str[tkn->end + 1]) == -1) && str[tkn->end + 1] != '\0')
 	{
 		tkn->end++;
 	}
@@ -102,18 +99,47 @@ void	handle_single_quotes_content(t_token **head, t_split *tkn, const char *str)
 	tkn->end++;
 	tkn->start = tkn->end + 1;
 	tkn->in_quotes = 0;
+}
+/*int	quote_count(const char *str, int i)
+{
+	int	nb_quote;
+	int	is_open;
+	//int	is_sep;
+
+	nb_quote = 0;
+	is_open = 1;
+	//is_sep = 0;
+	while (str[i] && is_open == 1)
+	{
+		if (str[i] == '\"')
+		{
+			if ((ft_strichr("<>;| ", str[i + 1]) != -1) || str[i + 1] == '\0')
+				is_open = 0;
+			nb_quote++;
+		}
+		i++;
+	}
+	return (nb_quote);
 }
 
-void	handle_double_quotes_content(t_token **head, t_split *tkn,
-		const char *str)
+int	single_quote_count(const char *str, int i)
 {
-	while (tkn->end <= tkn->length && (ft_strichr("<>;| ", str[tkn->end + 1]) ==
-			-1) && str[tkn->end + 1] != '\0')
+	int	nb_quote;
+	int	is_open;
+	// int	is_sep;
+
+	nb_quote = 0;
+	is_open = 1;
+	// is_sep = 0;
+	while (str[i] && is_open == 1)
 	{
-		tkn->end++;
+		if (str[i] == '\'')
+		{
+			if ((ft_strichr("<>;| ", str[i + 1]) != -1) || str[i + 1] == '\0')
+				is_open = 0;
+			nb_quote++;
+		}
+		i++;
 	}
-	add_token_to_list(head, &str[tkn->start], tkn->end - tkn->start + 1, tkn);
-	tkn->end++;
-	tkn->start = tkn->end + 1;
-	tkn->in_quotes = 0;
-}
+	return (nb_quote);
+}*/

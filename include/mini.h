@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 11:16:11 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 13:23:40 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 # define SUCCESS 0
 # define IS_DIRECTORY 126
 # define UNKNOWN_COMMAND 127
+# define H_D_DELIM "minishell: warning: here-document delimited by end of file"
 
 # define PIPE_ERR "Syntax error: \"|\" unexpected"
 # define LINE_ERR "Syntax error: newline unexpected"
@@ -164,7 +165,10 @@ typedef struct s_mini
 
 // srcs/parsing/command_processing.c
 void					update_token_types(t_mini *mini);
-void					is_cmd(t_token *current, char **env, int i);
+void					add_var_to_shenv(t_mini *mini, char *str);
+void					modify_shvar_value(t_mini *mini, char *str,
+							char *var_name);
+void					add_tmp_var(t_mini *mini, t_token *current);
 
 // srcs/parsing/error_handling.c
 int						pipe_error(t_token *current);
@@ -205,10 +209,8 @@ void					print_list(t_token *head);
 void					print_error(char *action);
 
 // srcs/parsing/switch_var.c
-char					*substitute_variable_value(char *token, t_split *tkn);
-char					*substitute_quote(char *token, t_split *tkn);
+char					*substitute_quote(char *token);
 void					handle_classic_env_value(t_switch *swap, t_split *tkn);
-char					*get_env(const char *name, char **myenvp);
 void					handle_last_return_value(t_switch *swap, t_split *tkn);
 
 // srcs/parsing/token_identification.c
@@ -222,6 +224,11 @@ char					*allocate_memory(t_replace *rep);
 void					replace_str(t_replace *rep);
 char					*replace_substring(char *str, char *str1, char *str2);
 void					free_without_cmd(t_mini *mini);
+
+// srcs/parsing/utils2.c
+void					is_cmd(t_token *current, char **env, int i);
+char					*get_env(const char *name, char **myenvp);
+char					*substitute_variable_value(char *token, t_split *tkn);
 
 ///////////////SRCS/PARSING/STRING_SPLIT/////////////
 
@@ -246,19 +253,26 @@ int						quote_count(const char *str, int i);
 int						single_quote_count(const char *str, int i);
 void					handle_single_quotes_content(t_token **head,
 							t_split *tkn, const char *str);
-void					handle_double_quotes_content(t_token **head,
-							t_split *tkn, const char *str);
 
 // srcs/parsing/string_split/string_split.c
-t_token					*split_string(const char *str, t_mini *mini);
-int						missing_quote(t_mini *mini, const char *str);
-char					*quote_prompt(void);
 void					process_string(const char *str, t_token **head,
 							t_split *tkn);
 void					handle_equal(t_token **head, t_split *tkn,
 							const char *str);
-void					init_split(t_split *tkn, t_mini *mini, const char *str);
 void					update_in_quotes(t_parser *parser);
+
+// srcs/parsing/string_split/string_split2.c
+t_token					*split_string(const char *str, t_mini *mini);
+void					handle_double_quotes_content(t_token **head,
+							t_split *tkn, const char *str);
+void					init_split(t_split *tkn, t_mini *mini, const char *str);
+
+// srcs/parsing/string_split/string_split3.c
+char					*quote_prompt(void);
+int						quotes_checking(const char *str, int is_open, int i);
+int						is_quotes_open(const char *str);
+void					new_input(t_mini *mini);
+int						missing_quote(t_mini *mini);
 
 ///////////////SRCS/EXEC/////////////////////
 
@@ -279,16 +293,13 @@ int						wait_for_children(void);
 bool					is_builtin(t_cmd *current);
 int						env_build(t_mini *mini);
 int						exec_bin(t_cmd *current, t_mini *mini);
+void					find_redirection(t_token *current, t_expect *ex);
 
 // srcs/exec/exec.c
+void					clean_redir(t_mini *mini);
+int						one_cmd(t_mini *mini, t_cmd *current);
 int						execute_cmd(t_mini *mini, t_cmd *current,
 							int pipe_fd[2], int i);
-void					find_redirection(t_token *current, t_expect *ex);
-void					pipe_redirection(t_mini *mini, t_cmd *current,
-							int pipe_fd[2], int i);
-int						one_command(t_mini *mini, t_cmd *current,
-							int pipe_fd[2], int i);
-void					iterate_commands(t_mini *mini);
 int						execution(t_mini *mini);
 
 // srcs/exec/handle_cmd.c
@@ -324,23 +335,31 @@ void					set_last_cmd(t_mini *mini);
 void					ft_close(int fd);
 int						ft_isalpha(char c);
 
+// srcs/exec/utils2.c
+char					*get_prompt_str(t_mini *mini);
+void					pipe_redirection(t_mini *mini, t_cmd *current,
+							int pipe_fd[2], int i);
+
+// srcs/exec/utils3.c
+void					set_signal_handlers(t_mini *mini);
+void					exec_command(t_mini *mini, t_cmd *current,
+							int pipe_fd[2], int i);
+void					close_pipe(t_mini *mini, int pipe_fd[2]);
+void					iterate_commands(t_mini *mini);
+
 ///////////////SRCS/BUILTINS/////////////////////
 // srcs/builtins/cd.c
-char					*get_prompt_str(t_mini *mini);
 int						cd_build(t_cmd *current, t_mini *mini);
 int						ft_go_home(char *path, t_mini *mini, char *old_pwd);
 int						ft_go_old_pwd(char *path, t_mini *mini, char *old_pwd);
 bool					ft_is_in_env(char *str, t_mini *mini);
 bool					only_key_already_in_env(char *str, t_mini *mini);
-bool					check_for_equal(const char *str);
-char					**ft_add_to_env(t_mini *mini, char *str);
-int						ft_update_env(t_mini *mini, char *old_pwd);
 
 // srcs/builtins/echo.c
 int						echo_build(t_cmd *current);
 
 // srcs/builtins/exit.c
-int					exit_build(t_cmd *current, t_mini *mini);
+int						exit_build(t_cmd *current, t_mini *mini);
 int						get_return_value(char **argv, bool *is_error,
 							t_mini *mini);
 
@@ -350,7 +369,9 @@ void					add_var_to_env(t_mini *mini, char *str);
 void					modify_var_value(t_mini *mini, char *str,
 							char *var_name);
 char					*get_var_str(char **envp, char *str);
-int						export_build(t_cmd *current, t_mini *mini);
+
+// srcs/builtins/export2.c
+int						export_build(t_mini *mini);
 
 // srcs/builtins/pwd.c
 int						pwd_build(void);
@@ -363,6 +384,11 @@ int						unset_build(t_cmd *current, t_mini *mini);
 // srcs/builtins/utils.c
 size_t					ft_lengh_array(char **array);
 void					ft_free_array(char **array);
+
+// srcs/builtins/utils2.c
+bool					check_for_equal(const char *str);
+char					**ft_add_to_env(t_mini *mini);
+int						ft_update_env(t_mini *mini, char *old_pwd);
 
 // main.c
 void					print_env(char **myenvp);

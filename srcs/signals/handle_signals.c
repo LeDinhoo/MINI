@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_signals.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 13:24:33 by clement           #+#    #+#             */
-/*   Updated: 2023/10/10 18:06:47 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 21:20:41 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	ft_handle_signal(int sig_prompt)
 {
 	(void)sig_prompt;
 	write(1, "\n", 1);
-	// ft_dprintf(STDOUT_FILENO, "\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -55,3 +54,13 @@ void	ft_set_signals_handle(t_sig *sig)
 	sig->here_doc->sa_flags = SA_RESTART;
 	sigemptyset(&sig->here_doc->sa_mask);
 }
+
+/*void	ft_handle_signal(int sig_prompt)
+{
+	(void)sig_prompt;
+	write(1, "\n", 1);
+	// ft_dprintf(STDOUT_FILENO, "\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}*/

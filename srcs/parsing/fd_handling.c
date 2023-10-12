@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   fd_handling.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:27:11 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/10 18:08:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 21:25:06 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int		ctrl_c_pressed = 0;
+int		g_ctrl_c_pressed = 0;
 
 void	sigint_handler(int signum)
 {
-	ctrl_c_pressed = 1;
+	if (signum == SIGINT)
+		g_ctrl_c_pressed = 1;
 }
 
 void	ft_putstr_heredoc(char *s, int heredoc_fd)
@@ -52,10 +53,9 @@ void	setup_here_doc(t_mini *mini, char *limiter)
 		prompt = here_prompt();
 		s1 = readline(prompt);
 		if (!s1)
-			return (printf("minishell: warning: here-document delimited by end of file (wanted '%s')\n",
-					limiter), (void)0);
-		if (ctrl_c_pressed)
-			return (ctrl_c_pressed = 0, free(s1), close(mini->here_doc_fd),
+			return (printf(H_D_DELIM "(wanted '%s')\n", limiter), (void)0);
+		if (g_ctrl_c_pressed)
+			return (g_ctrl_c_pressed = 0, free(s1), close(mini->here_doc_fd),
 				(void)0);
 		if (ft_strncmp(s1, limiter, ft_strlen(limiter)) == 0)
 			return (free(s1), (void)0);

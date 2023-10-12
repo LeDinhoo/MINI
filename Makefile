@@ -2,7 +2,7 @@
 
 NAME = minishell
 CC = gcc -g3
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) 
 
@@ -25,6 +25,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/path.c \
 		$(SRC_DIR)/srcs/parsing/print_helper.c \
 		$(SRC_DIR)/srcs/parsing/string_split/string_split.c \
+		$(SRC_DIR)/srcs/parsing/string_split/string_split2.c \
+		$(SRC_DIR)/srcs/parsing/string_split/string_split3.c \
 		$(SRC_DIR)/srcs/parsing/string_split/split_quotes.c \
 		$(SRC_DIR)/srcs/parsing/string_split/split_other.c \
 		$(SRC_DIR)/srcs/parsing/token_identification.c \
@@ -32,12 +34,15 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/parsing/fd_handling.c \
 		$(SRC_DIR)/srcs/parsing/pars_token.c \
 		$(SRC_DIR)/srcs/parsing/utils.c \
+		$(SRC_DIR)/srcs/parsing/utils2.c \
 		$(SRC_DIR)/srcs/parsing/switch_var.c \
 		$(SRC_DIR)/srcs/builtins/echo.c \
 		$(SRC_DIR)/srcs/builtins/cd.c \
 		$(SRC_DIR)/srcs/builtins/unset.c \
 		$(SRC_DIR)/srcs/builtins/utils.c \
+		$(SRC_DIR)/srcs/builtins/utils2.c \
 		$(SRC_DIR)/srcs/builtins/export.c \
+		$(SRC_DIR)/srcs/builtins/export2.c \
 		$(SRC_DIR)/srcs/builtins/exit.c \
 		$(SRC_DIR)/srcs/builtins/pwd.c \
 		$(SRC_DIR)/srcs/exec/exec_builtin.c \
@@ -47,6 +52,8 @@ SRC = 	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/srcs/exec/handle_path.c \
 		$(SRC_DIR)/srcs/exec/handle_cmd.c \
 		$(SRC_DIR)/srcs/exec/utils.c \
+		$(SRC_DIR)/srcs/exec/utils2.c \
+		$(SRC_DIR)/srcs/exec/utils3.c \
 		$(SRC_DIR)/srcs/exec/error_ret.c \
 		$(SRC_DIR)/srcs/signals/handle_signals.c \
 		$(SRC_DIR)/srcs/signals/init_signals.c \

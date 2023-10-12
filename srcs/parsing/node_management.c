@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_management.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 12:57:09 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/03 14:16:46 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 12:52:45 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	add_node(t_token **head, char *str, int type)
 
 	node = malloc(sizeof(t_token));
 	node->str = ft_strdup(str);
-	if ((node->str[0] == '\'' && node->str[1] == '\0') || (node->str[0] == '\"'
+	if ((node->str[0] == '\'' && node->str[1] == '\0')
+		|| (node->str[0] == '\"'
 			&& node->str[1] == '\0'))
 		node->str[0] = ' ';
 	node->type = type;
@@ -52,7 +53,7 @@ void	add_token_to_list(t_token **head, const char *start, int tokenLength,
 		free(token);
 		return ;
 	}
-	substituted_token = substitute_quote(substituted_token, tkn);
+	substituted_token = substitute_quote(substituted_token);
 	add_node(head, substituted_token, determine_token_type(substituted_token,
 			tkn));
 	tkn->in_simple_quotes = 0;

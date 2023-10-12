@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 08:43:30 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 16:04:03 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 20:33:22 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,30 @@ int	unset_build(t_cmd *current, t_mini *mini)
 	int		j;
 	int		arg;
 
+	new_env = init_new_envp(mini->envp);
+	i = 0;
+	j = 0;
+	arg = 1;
+	while (mini->envp[j])
+	{
+		while (current->cmd_args[arg])
+			if (!ft_strstr(mini->envp[j], current->cmd_args[arg++]))
+				new_env[i++] = ft_strdup(mini->envp[j]);
+		j++;
+		arg = 1;
+	}
+	free_envp(mini->envp);
+	mini->envp = new_env;
+	return (0);
+}
+
+/*int	unset_build(t_cmd *current, t_mini *mini)
+{
+	char	**new_env;
+	int		i;
+	int		j;
+	int		arg;
+
 	new_env = NULL;
 	new_env = init_new_envp(mini->envp);
 	i = 0;
@@ -71,4 +95,4 @@ int	unset_build(t_cmd *current, t_mini *mini)
 	free_envp(mini->envp);
 	mini->envp = new_env;
 	return (0);
-}
+}*/
