@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 04:30:30 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 14:04:51 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 14:17:56 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ char	*find_var_name(char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
-	var_name = ft_calloc(i - 1, sizeof(char));
+	var_name = ft_calloc(i + 1, sizeof(char));
 	i = 0;
 	while (str[i] && str[i] != '=')
 	{
 		var_name[i] = str[i];
 		i++;
 	}
-	var_name[i] = '\0';
+	printf("zizizizi%s\n", var_name);
+	printf("len: %ld\n", ft_strlen(var_name));
 	return (var_name);
 }
 
@@ -94,34 +95,5 @@ char	*get_var_str(char **envp, char *str)
 			return (envp[i]);
 		i++;
 	}
-}
-
-int	export_build(t_cmd *current, t_mini *mini)
-{
-	t_token	*cur_tkn;
-	char	*var_name;
-
-	cur_tkn = mini->start;
-	while (cur_tkn)
-	{
-		if (cur_tkn->type == EXPORT)
-		{
-			var_name = find_var_name(cur_tkn->str);
-			ft_printf("%s\n", var_name);
-			if (get_env(var_name, mini->envp) == NULL)
-				add_var_to_env(mini, cur_tkn->str);
-			else
-				modify_var_value(mini, cur_tkn->str, var_name);
-		}
-		else if (get_env(cur_tkn->str, mini->sh_envp))
-		{
-			var_name = get_var_str(mini->sh_envp, cur_tkn->str);
-			if (get_env(cur_tkn->str, mini->envp) == NULL)
-				add_var_to_env(mini, var_name);
-			else
-				modify_var_value(mini, var_name, cur_tkn->str);
-		}
-		cur_tkn = cur_tkn->next;
-	}
-	return (0);
+	return (NULL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:49:46 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/09/19 11:02:29 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 22:10:48 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	get_count(t_replace *rep)
 
 char	*allocate_memory(t_replace *rep)
 {
-	rep->resultat = malloc(strlen(rep->str) + (rep->len_substr2
+	rep->resultat = malloc(ft_strlen(rep->str) + (rep->len_substr2
 				- rep->len_substr1) * rep->count + 1);
 	if (!rep->resultat)
 	{

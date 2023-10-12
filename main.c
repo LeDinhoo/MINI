@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:02:21 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 04:32:45 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 14:56:04 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	print_env(char **myenvp)
 	len = 0;
 	while (myenvp && myenvp[len])
 	{
-		ft_printf("%s\n", myenvp[len]);
+		if (ft_strchr(myenvp[len], '=') != NULL)
+			ft_printf("%s\n", myenvp[len]);
 		len++;
 	}
 }
@@ -43,10 +44,23 @@ void	ft_prompt(t_mini *mini)
 	mini->input = readline(prompt);
 }
 
+void	go_cmd(t_mini *mini)
+{
+	add_history(mini->input);
+	missing_quote(mini);
+	mini->start = split_string(mini->input, mini);
+	if (pars_token(mini))
+	{
+		update_token_types(mini);
+		execution(mini);
+	}
+	// print_list(mini->start);
+	free_without_cmd(mini);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
-	char	*prompt;
 
 	(void)argc;
 	(void)argv;
@@ -60,15 +74,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_prompt(&mini);
 		if (mini.input != NULL)
 		{
-			add_history(mini.input);
-			missing_quote(&mini, mini.input);
-			mini.start = split_string(mini.input, &mini);
-			if (pars_token(&mini))
-			{
-				update_token_types(&mini);
-				execution(&mini);
-			}
-			free_without_cmd(&mini);
+			go_cmd(&mini);
 		}
 		else
 		{

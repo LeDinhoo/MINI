@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 13:05:18 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/06 15:47:00 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 12:58:38 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,18 @@ int	exec_bin(t_cmd *current, t_mini *mini)
 	else if (ft_strcmp(current->cmd_args[0], "exit") == 0)
 		return (exit_build(current, mini));
 	else if (ft_strcmp(current->cmd_args[0], "export") == 0)
-		return (export_build(current, mini));
+		return (export_build(mini));
 	return (ret);
+}
+
+void	find_redirection(t_token *current, t_expect *ex)
+{
+	if (current->type == INPUT)
+		ex->input = 1;
+	else if (current->type == TRUNC)
+		ex->output = 1;
+	else if (current->type == APPEND)
+		ex->append = 1;
+	else if (current->type == HEREDOC)
+		ex->heredoc = 1;
 }

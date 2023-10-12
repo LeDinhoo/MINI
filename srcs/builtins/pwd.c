@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:33:12 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/05 16:33:55 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 20:21:36 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	pwd_build(void)
 {
-	char *str;
+	char	*str;
 
 	str = getcwd(NULL, 0);
 	if (str == NULL)

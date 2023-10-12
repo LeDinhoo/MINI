@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_signals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdupuy <dupuy@student.42.fr>               +#+  +:+       +#+        */
+/*   By: cbacquet <cbacquet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 13:23:55 by clement           #+#    #+#             */
-/*   Updated: 2023/10/05 12:48:03 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/10 21:20:56 by cbacquet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ft_check_malloc(t_sig *sig)
 		exit(EXIT_FAILURE);
 	}
 }
+
 void	ft_sig_quit_parent(int sig)
 {
 	(void)sig;
