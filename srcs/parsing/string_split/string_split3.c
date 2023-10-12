@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 18:17:07 by cbacquet          #+#    #+#             */
-/*   Updated: 2023/10/12 20:10:26 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 20:31:10 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	missing_quote(t_mini *mini)
 		prompt = quote_prompt();
 		new_str = readline(prompt);
 		if (!new_str)
-			return (printf(H_D_DELIM "(wanted '')\n"), (void)0);
+			return (printf(Q_DELIM " (wanted « %c »)\n", '"'), (void)0);
 		if (g_ctrl_c_press)
 			return (g_ctrl_c_press = 0, (void)0);
 		new_str = strjoin_bis("\n", new_str);

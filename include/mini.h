@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:00:01 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/12 20:11:51 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 20:28:31 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@
 # define IS_DIRECTORY 126
 # define UNKNOWN_COMMAND 127
 
-# define H_D_DELIM "minishell: warning: here-document delimited by end of file"
+# define H_D_DELIM "mini: warning: here-document delimited by end of file"
+# define Q_DELIM "mini: premature end of file (EOF) when searching"
 # define PIPE_ERR "Syntax error: \"|\" unexpected"
 # define LINE_ERR "Syntax error: newline unexpected"
 

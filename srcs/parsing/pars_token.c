@@ -6,7 +6,7 @@
 /*   By: hdupuy <hdupuy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 17:40:34 by hdupuy            #+#    #+#             */
-/*   Updated: 2023/10/12 18:26:23 by hdupuy           ###   ########.fr       */
+/*   Updated: 2023/10/12 20:38:35 by hdupuy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,25 @@ char	*here_prompt(void)
 
 int	missing_pipe(t_mini *mini, t_token *current)
 {
-	char	*prompt;
+	char				*prompt;
+	struct sigaction	sa;
 
+	sa.sa_handler = sigint_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
 	if (!current->next && current->type == PIPE)
 	{
 		prompt = pipe_prompt();
 		mini->input = readline(prompt);
+		if (mini->input == NULL)
+		{
+			free_signals(mini);
+			printf("mini: syntax error: unexpected end of file\nexit\n");
+			exit(2);
+		}
+		if (g_ctrl_c_press)
+			return (0);
 		mini->start = split_string(mini->input, mini);
 		if (!pars_token(mini))
 			return (0);
